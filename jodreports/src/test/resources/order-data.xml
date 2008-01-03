@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<order id="872">
+  <line>
+    <item>
+      <description>Ubuntu 6.06</description>
+      <!-- compared to Microsoft Windows XP Professional SP2 -->
+      <unitSavings>279.99</unitSavings>
+    </item>
+    <quantity>5</quantity>
+    <lineSavings>1,399.95</lineSavings>
+  </line>
+  <line>
+    <item>
+      <description>MySQL 5.0</description>
+      <!-- compared to Microsoft SQL Server Standard Edition 2005 (1 CPU) -->
+      <unitSavings>5,399.11</unitSavings>
+    </item>
+    <quantity>1</quantity>
+    <lineSavings>5,399.11</lineSavings>
+  </line>
+  <line>
+    <item>
+      <description>OpenOffice.org 2.0</description>
+      <!-- compared to Microsoft Office Professional Edition 2003 -->
+      <unitSavings>379.99</unitSavings>
+    </item>
+    <quantity>4</quantity>
+    <lineSavings>1,519.96</lineSavings>
+  </line>
+  <line>
+    <item>
+      <description>The GIMP 2.2</description>
+      <!-- compared to Adobe Photoshop CS2 -->
+      <unitSavings>589.99</unitSavings>
+    </item>
+    <quantity>2</quantity>
+    <lineSavings>1,179.98</lineSavings>
+  </line>
+  <totalSavings>9,499.00</totalSavings>
+</order>
