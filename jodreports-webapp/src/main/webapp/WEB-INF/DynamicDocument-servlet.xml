@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!--
+  - Application context definition for "DynamicDocument" DispatcherServlet.
+  -->
+
+<beans>
+
+	<!-- ready-to-use document generators -->
+	<bean id="xmlDocumentGenerator" class="net.sf.jooreports.web.spring.controller.XmlDocumentGenerator"/>
+	<bean id="httpParametersDocumentGenerator" class="net.sf.jooreports.web.spring.controller.HttpParametersDocumentGenerator"/>
+	<!-- custom document generator -->
+	<bean id="salesReportGenerator" class="net.sf.jooreports.web.samples.SalesReportGenerator"/>
+	
+	<!-- a "standard" Spring FormController for the Letter example -->
+	<bean id="letterFormController" class="net.sf.jooreports.web.samples.LetterFormController">
+		<property name="formView" value="letterFormView"/>
+		<property name="successView" value="letterView"/>
+	</bean>
+
+	<bean id="handlerMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="mappings">
+			<props>
+			
+				<!-- Letter example with a proper FormController -->
+				<prop key="/mvc/letter.html">letterFormController</prop>
+			
+				<!--
+				  - Some possible key values:
+				  -
+				  - "foo.pdf"  ->  PDF from template "foo"
+				  - "foo.*"    ->  any format from template "foo"
+				  - "*.pdf"    ->  PDF from any template
+				  - "*"        ->  any format from any template
+				  -
+				-->				
+				<!-- named templates -->
+				<prop key="letter.*">httpParametersDocumentGenerator</prop>
+				<prop key="order.*">xmlDocumentGenerator</prop>
+				<prop key="report.*">salesReportGenerator</prop>
+				
+				<!-- ready to use; just drop new templates into WEB-INF/templates/ -->
+				<prop key="/params/*">httpParametersDocumentGenerator</prop>
+				<prop key="/xml/*">xmlDocumentGenerator</prop>
+								
+			</props>
+		</property>
+	</bean>
+
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.ResourceBundleViewResolver">
+		<property name="basename" value="views"/>
+	</bean>
+
+</beans>

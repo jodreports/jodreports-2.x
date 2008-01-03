@@ -1,0 +1,189 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html>
+  <head>
+    <title>JOOReports - Order Example</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+    <script language="javascript">
+
+items = new Array();
+items[0] = {
+  'description': 'OpenOffice.org 2.0',
+  'unitSavings': 379.99
+};
+items[1] = {
+  'description': 'Ubuntu Linux 6.06',
+  'unitSavings': 279.99
+};
+items[2] = {
+  'description': 'The GIMP 2.2',
+  'unitSavings': 589.99
+};
+items[3] = {
+  'description': 'MySQL 5.0',
+  'unitSavings': 5399.11
+};
+
+function addOrderLine(itemIndex, quantityField) {
+    var item = items[itemIndex];
+    var quantity = parseInt(quantityField.value);
+    if (isNaN(quantity) || quantity < 1) {
+        alert('Invalid quantity: '+ quantityField.value);
+        return;
+    }
+    var orderTable = document.getElementById('orderTable');
+    var rowIndex = orderTable.rows.length - 1;
+    var row = orderTable.insertRow(rowIndex);
+    row.setAttribute('itemIndex', itemIndex);
+    var productCell = row.insertCell(0);
+    productCell.innerHTML = item.description;
+    var quantityCell = row.insertCell(1);
+    quantityCell.style.textAlign = 'right';
+    quantityCell.innerHTML = quantity;
+    var priceCell = row.insertCell(2);
+    priceCell.style.textAlign = 'right';
+    priceCell.innerHTML = '0.00';
+    var savingsCell = row.insertCell(3);
+    savingsCell.style.textAlign = 'right';
+    savingsCell.innerHTML = formatPrice(item.unitSavings * quantity);
+    var deleteCell = row.insertCell(4);
+    deleteCell.innerHTML = '<a href="javascript:removeRow('+ rowIndex +')" title="Delete this row">[x]</a>';
+    updateOrderTotals();
+}
+
+function removeRow(index) {
+    var orderTable = document.getElementById('orderTable');
+    orderTable.deleteRow(index);
+    updateOrderTotals();
+}
+
+function formatPrice(amount) {
+    var digits = new String(Math.round(amount * 100.00));
+    return digits.substr(0, digits.length - 2) +'.'+ digits.substr(digits.length - 2);
+}
+
+function updateOrderTotals() {
+    var total = 0.00;
+    var orderTable = document.getElementById('orderTable');
+    for (var i = 1; i < orderTable.rows.length - 1; i++) {
+        total += parseFloat(orderTable.rows[i].cells[3].innerHTML);
+        var deleteCell = orderTable.rows[i].cells[4];
+        deleteCell.innerHTML = '<a href="javascript:removeRow('+ i +')" title="Remove This Row">[x]</a>';
+    }
+    orderTable.rows[orderTable.rows.length - 1].cells[3].innerHTML = formatPrice(total);
+}
+
+function initItemOptions() {
+    var options = document.getElementById('productSelect').options;
+    for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        options[i + 1] = new Option(item.description, i);
+    }
+}
+
+function submitOrder(form) {
+	var xml = '<order id="123">\n';
+    var orderTable = document.getElementById('orderTable');
+    var totalSavings = 0.00;
+    for (var i = 1; i < orderTable.rows.length - 1; i++) {
+        var row = orderTable.rows[i];
+        var item = items[row.getAttribute('itemIndex')];
+        var quantity = row.cells[1].innerHTML;
+		xml += '  <line>\n';
+		xml += '    <item>\n';
+		xml += '      <description>'+ item.description +'</description>\n';
+		xml += '      <unitSavings>'+ item.unitSavings +'</unitSavings>\n';
+		xml += '    </item>\n';
+		xml += '    <quantity>'+ quantity +'</quantity>\n';
+		xml += '    <lineSavings>'+ formatPrice(item.unitSavings * quantity) +'</lineSavings>\n';
+		xml += '  </line>\n';
+		totalSavings += item.unitSavings * quantity;
+    }
+    xml += '  <totalSavings>'+ formatPrice(totalSavings) +'</totalSavings>\n';
+	xml += '</order>';
+	form.model.value = xml;
+    form.action = 'order.'+ form.outputFormat.value;
+    form.submit();
+}
+
+    </script>
+  </head>
+  <body onload="initItemOptions()">
+
+    <div id="content">
+      <h1>JOOReports - Order Example</h1>
+
+      <p>
+        Welcome to the <b>Open Source Software Store</b>.
+      </p>
+      <p>
+        This store is a buyers' dream come true. You can buy as many items
+        as you want and the total price always stays <b>zero</b>!<br/>
+        Additionally you can see how much you save compared to similar
+        commercial products<a href="#disclaimer">*</a>.
+      </p>
+
+      <form id="orderForm" method="post" action="order">
+        <input type="hidden" name="model" id="model" value="">
+        <table class="form">
+          <tr>
+            <td class="label">Pick an Item:</td>
+            <td>
+              <select name="product" id="productSelect">
+                <option value="">-- select --</option>
+              </select>
+            </td>
+            <td>
+              <input type="text" name="quantity" size="3" value="1" style="text-align: right;">
+            </td>
+            <td>
+             <input type="button" value="Add" onclick="addOrderLine(this.form.product.value, this.form.quantity)">
+            </td>
+          </tr>
+        </table>
+
+        <table id="orderTable" style="width: 80%;">
+          <tr>
+            <th style="width: 60%;">Product</th>
+            <th style="width: 10%;">Quantity</th>
+            <th style="width: 10%;">Price ($)</th>
+            <th style="width: 10%;">Savings ($)</th>
+            <th></th>
+          </tr>
+          <tr style="font-weight: bold;">
+            <td>Totals</td>
+            <td></td>
+            <td style="text-align: right; border-top: solid black 1px;">0.00</td>
+            <td style="text-align: right; border-top: solid black 1px;">0.00</td>
+            <td></td>
+          </tr>
+        </table>
+
+        Format:
+        <select name="outputFormat">
+		  <option value="pdf" selected="selected">Portable Document Format (pdf)</option>
+		  <option value="odt">OpenDocument Text (odt)</option>
+	      <option value="doc">Microsoft Word (doc)</option>
+	      <option value="rtf">Rich Text Format (rtf)</option>
+        </select>
+
+        <input type="button" value="Order" onclick="submitOrder(this.form)">
+      </form>
+
+	  <hr/>
+	  <p>
+        This <i>JOOReports</i> example contains quite a bit of JavaScript on the
+        client side and passes the order data as XML (sort of AJAX if you like)
+        to one of the ready-made document generators.
+	  </p>
+	
+      <p class="small">
+        <a name="disclaimer"><b>*Disclaimer</b></a>:
+        Of course this has no pretense whatsoever of being an accurate or
+        even meaningful comparison between commercial and open source
+        software products.
+      </p>
+
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<bean id="openOfficeConnection" class="net.sf.jooreports.openoffice.connection.SocketOpenOfficeConnection" destroy-method="disconnect">
+		<!-- host -->
+		<constructor-arg index="0">
+			<value>localhost</value>
+		</constructor-arg>
+		<!-- port -->
+		<constructor-arg index="1">
+			<value>8100</value>
+		</constructor-arg>
+	</bean>
+
+	<bean id="documentFormatRegistry" class="net.sf.jooreports.converter.XmlDocumentFormatRegistry"/>
+
+	<bean id="documentConverter" class="net.sf.jooreports.openoffice.converter.OpenOfficeDocumentConverter">
+		<constructor-arg index="0">
+			<ref bean="openOfficeConnection"/>
+		</constructor-arg>
+		<constructor-arg index="1">
+			<ref bean="documentFormatRegistry"/>
+		</constructor-arg>
+	</bean>
+
+</beans>

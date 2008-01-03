@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <title>JOOReports - Sales Report Example</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <script language="javascript">
+
+function doSubmit(form) {
+	// set appropriate format extension
+	form.action = 'report.'+ form.format.value;
+	return true;
+}
+
+	</script>
+  </head>
+  <body>
+
+    <div id="content">
+      <h1>JOOReports - Sales Report Example</h1>
+
+      <p>
+        This example generates a report for some hypothetical monthly sales data,
+        including a dynamically generated chart.
+      </p>
+      
+      <form name="reportForm" method="post" action="report.pdf" onsubmit="doSubmit(this)">
+        <table>
+          <tr>
+            <th style="padding-right: 50px;">Month</th>
+            <th>Sales</th>
+            <th></th>
+          </tr>
+          <tr>
+            <td>January</td>
+            <td><input type="text" name="month_1" size="4" class="number" value="350"/></td>
+          </tr>
+          <tr>
+            <td>February</td>
+            <td><input type="text" name="month_2" size="4" class="number" value="340"/></td>
+          </tr>
+          <tr>
+            <td>March</td>
+            <td><input type="text" name="month_3" size="4" class="number" value="420"/></td>
+          </tr>
+          <tr>
+            <td>April</td>
+            <td><input type="text" name="month_4" size="4" class="number" value="440"/></td>
+          </tr>
+          <tr>
+            <td>May</td>
+            <td><input type="text" name="month_5" size="4" class="number" value="510"/></td>
+          </tr>
+          <tr>
+            <td>June</td>
+            <td><input type="text" name="month_6" size="4" class="number" value="480"/></td>
+          </tr>
+        </table>
+		<p>
+		  Format: 
+		  <select name="format">
+			<option value="pdf" selected="selected">Portable Document Format (pdf)</option>
+			<option value="odt">OpenDocument Text (odt)</option>
+		    <option value="doc">Microsoft Word (doc)</option>
+		    <option value="rtf">Rich Text Format (rtf)</option>
+		  </select>
+          <input type="submit" value="Generate Report"/>
+        </p>
+      </form>
+
+	  <hr/>
+      <p class="small">
+        Data is passed as HTTP parameters and used by a custom web controller
+        on the server to generate the dynamic chart
+        (using  <a href="http://www.jfree.org/jfreechart/">JFreeChart</a>).
+      </p>
+
+    </div>
+
+  </body>
+</html>

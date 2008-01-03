@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app>
+
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>/WEB-INF/applicationContext.xml</param-value>
+  </context-param>
+
+  <servlet>
+    <servlet-name>context</servlet-name>
+    <servlet-class>
+      org.springframework.web.context.ContextLoaderServlet
+    </servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet>
+    <servlet-name>DynamicDocument</servlet-name>
+    <servlet-class>
+      org.springframework.web.servlet.DispatcherServlet
+    </servlet-class>
+    <load-on-startup>2</load-on-startup>
+  </servlet>
+
+  <!--
+    - Map all needed output formats
+  -->
+  <servlet-mapping>
+    <servlet-name>DynamicDocument</servlet-name>
+    <url-pattern>*.pdf</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DynamicDocument</servlet-name>
+    <url-pattern>*.odt</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DynamicDocument</servlet-name>
+    <url-pattern>*.doc</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DynamicDocument</servlet-name>
+    <url-pattern>*.rtf</url-pattern>
+  </servlet-mapping>
+
+  <!--
+    - This is to show how to plug a DocumentView into a
+    - "standard" Spring MVC application.
+  -->
+  <servlet-mapping>
+    <servlet-name>DynamicDocument</servlet-name>
+    <url-pattern>/spring/*</url-pattern>
+  </servlet-mapping>
+</web-app>
