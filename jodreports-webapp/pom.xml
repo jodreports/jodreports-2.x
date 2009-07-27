@@ -33,9 +33,9 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>net.sf.jooreports</groupId>
-      <artifactId>jooconverter</artifactId>
-      <version>2.1.0</version>
+		<groupId>com.artofsolving</groupId>
+  		<artifactId>jodconverter</artifactId>
+        <version>2.2.2</version>
     </dependency>
     <dependency>
       <groupId>net.sf.jooreports</groupId>

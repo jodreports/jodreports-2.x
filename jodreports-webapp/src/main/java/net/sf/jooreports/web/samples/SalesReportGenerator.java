@@ -18,6 +18,7 @@ package net.sf.jooreports.web.samples;
 import java.awt.Color;
 import java.awt.GradientPaint;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -31,8 +32,8 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 
-import net.sf.jooreports.templates.images.ByteArrayImageProvider;
-import net.sf.jooreports.templates.images.ImageProvider;
+import net.sf.jooreports.templates.image.RenderedImageSource;
+import net.sf.jooreports.templates.image.ImageSource;
 import net.sf.jooreports.web.spring.controller.AbstractDocumentGenerator;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
@@ -74,16 +75,16 @@ public class SalesReportGenerator extends AbstractDocumentGenerator {
         }
         Map model = new HashMap();
         model.put("lines", lines);
+        model.put("chart", getImageProvider(model));
         return model;
     }
 
-    protected ImageProvider getImageProvider(Object model) {
-    	ByteArrayImageProvider imageProvider = new ByteArrayImageProvider();
-    	imageProvider.setImage("chart", createChart(model));
+    protected ImageSource getImageProvider(Object model) {
+    	RenderedImageSource imageProvider = new RenderedImageSource(createChart(model));
     	return imageProvider;
     }
 
-    private byte[] createChart(Object model) {
+    private RenderedImage createChart(Object model) {
         List lines = (List) ((Map) model).get("lines");
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         for (Iterator it = lines.iterator(); it.hasNext();) {
@@ -107,6 +108,6 @@ public class SalesReportGenerator extends AbstractDocumentGenerator {
 		} catch (IOException ioException) {
 			throw new RuntimeException("should never happen: " + ioException.getMessage());
 		}
-		return outputStream.toByteArray();
+		return image;
     }
 }

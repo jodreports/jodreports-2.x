@@ -17,21 +17,18 @@ package net.sf.jooreports.web.spring.controller;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.jooreports.converter.DocumentConverter;
-import net.sf.jooreports.converter.DocumentFormat;
-import net.sf.jooreports.converter.DocumentFormatRegistry;
+import com.artofsolving.jodconverter.DocumentConverter;
+import com.artofsolving.jodconverter.DocumentFormat;
+import com.artofsolving.jodconverter.DocumentFormatRegistry;
 import net.sf.jooreports.templates.DocumentTemplate;
 import net.sf.jooreports.templates.DocumentTemplateException;
-import net.sf.jooreports.templates.UnzippedDocumentTemplate;
-import net.sf.jooreports.templates.ZippedDocumentTemplate;
-import net.sf.jooreports.templates.images.ImageProvider;
+import net.sf.jooreports.templates.DocumentTemplateFactory;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
@@ -54,16 +51,6 @@ public abstract class AbstractDocumentGenerator extends AbstractController {
         renderDocument(getModel(request), request, response);
         return null;
 	}
-
-	/**
-	 * Hook for specifying an {@link ImageProvider}.
-	 * 
-	 * @param model
-	 * @return
-	 */
-    protected ImageProvider getImageProvider(Object model) {
-    	return null;
-    }
 
     private Resource getTemplateDirectory(String documentName) throws IOException {
         String directoryName = "WEB-INF/templates/"+ documentName +"-template";
@@ -95,17 +82,12 @@ public abstract class AbstractDocumentGenerator extends AbstractController {
             }
         }
         
-        DocumentTemplate template = null;
-        if (templateFile.isDirectory()) {
-            template = new UnzippedDocumentTemplate(templateFile);
-        } else {
-            template = new ZippedDocumentTemplate(new FileInputStream(templateFile));        
-        }
+        DocumentTemplateFactory documentTemplateFactory = new DocumentTemplateFactory();
+        DocumentTemplate template = documentTemplateFactory.getTemplate(templateFile);
         
         ByteArrayOutputStream odtOutputStream = new ByteArrayOutputStream();
         try {
-		    ImageProvider imageProvider = getImageProvider(model);
-			template.createDocument(model, odtOutputStream, imageProvider);
+			template.createDocument(model, odtOutputStream);
 		} catch (DocumentTemplateException exception) {
 		    throw new ServletException(exception);
 		}

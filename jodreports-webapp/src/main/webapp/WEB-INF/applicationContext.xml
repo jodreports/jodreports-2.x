@@ -3,7 +3,7 @@
 
 <beans>
 
-	<bean id="openOfficeConnection" class="net.sf.jooreports.openoffice.connection.SocketOpenOfficeConnection" destroy-method="disconnect">
+	<bean id="openOfficeConnection" class="com.artofsolving.jodconverter.openoffice.connection.SocketOpenOfficeConnection" destroy-method="disconnect">
 		<!-- host -->
 		<constructor-arg index="0">
 			<value>localhost</value>
@@ -14,9 +14,9 @@
 		</constructor-arg>
 	</bean>
 
-	<bean id="documentFormatRegistry" class="net.sf.jooreports.converter.XmlDocumentFormatRegistry"/>
+	<bean id="documentFormatRegistry" class="com.artofsolving.jodconverter.XmlDocumentFormatRegistry"/>
 
-	<bean id="documentConverter" class="net.sf.jooreports.openoffice.converter.OpenOfficeDocumentConverter">
+	<bean id="documentConverter" class="com.artofsolving.jodconverter.openoffice.converter.OpenOfficeDocumentConverter">
 		<constructor-arg index="0">
 			<ref bean="openOfficeConnection"/>
 		</constructor-arg>
