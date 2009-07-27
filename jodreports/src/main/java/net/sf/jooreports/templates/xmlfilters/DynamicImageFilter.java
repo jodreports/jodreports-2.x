@@ -21,6 +21,8 @@ public class DynamicImageFilter extends XmlEntryFilter {
 	 */
 	public static final String IMAGE_NAME_PREFIX = TemplateFreemarkerNamespace.NAME + ".image(";
 	public static final String IMAGE_NAME_SUFFIX = ")";
+	public static final String IMAGE_WIDTH_PREFIX 		= TemplateFreemarkerNamespace.NAME + ".imageWidth(";
+	public static final String IMAGE_HEIGHT_PREFIX 		= TemplateFreemarkerNamespace.NAME + ".imageHeight(";
 
 	private static final Log log = LogFactory.getLog(DynamicImageFilter.class);
 
@@ -36,7 +38,19 @@ public class DynamicImageFilter extends XmlEntryFilter {
 			String frameName = frameElement.getAttributeValue("name", OpenDocumentNamespaces.URI_DRAW);
 			if (frameName != null && frameName.startsWith(IMAGE_NAME_PREFIX) && frameName.endsWith(IMAGE_NAME_SUFFIX)) {
 				Attribute hrefAttribute = imageElement.getAttribute("href", OpenDocumentNamespaces.URI_XLINK);
-				hrefAttribute.setValue("${" + frameName + "}");
+				String defaultImageName = hrefAttribute.getValue();
+				if (frameName.contains(",")) {
+					Attribute widthAttribute = frameElement.getAttribute("width", OpenDocumentNamespaces.URI_SVG);
+					Attribute heightAttribute = frameElement.getAttribute("height", OpenDocumentNamespaces.URI_SVG);
+					String maxSize = "," + widthAttribute.getValue().replace("cm", "") + "," + 
+											heightAttribute.getValue().replace("cm", "") + ",";
+					String sizeParameters = frameName.replaceFirst(",", maxSize);
+					widthAttribute.setValue("${" + sizeParameters.replace(IMAGE_NAME_PREFIX, IMAGE_WIDTH_PREFIX+"'"+defaultImageName+"',") + "}");
+					heightAttribute.setValue("${" + sizeParameters.replace(IMAGE_NAME_PREFIX, IMAGE_HEIGHT_PREFIX+"'"+defaultImageName+"',") + "}");
+
+					frameName = frameName.split(",")[0] + IMAGE_NAME_SUFFIX;
+				}
+				hrefAttribute.setValue("${" + frameName.replace(IMAGE_NAME_PREFIX, IMAGE_NAME_PREFIX+"'"+defaultImageName+"',") + "}");
 			}
 		}
 	}

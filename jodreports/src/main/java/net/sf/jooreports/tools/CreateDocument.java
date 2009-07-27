@@ -21,8 +21,7 @@ import java.io.FileOutputStream;
 import java.util.Properties;
 
 import net.sf.jooreports.templates.DocumentTemplate;
-import net.sf.jooreports.templates.UnzippedDocumentTemplate;
-import net.sf.jooreports.templates.ZippedDocumentTemplate;
+import net.sf.jooreports.templates.DocumentTemplateFactory;
 
 import org.apache.commons.io.FilenameUtils;
 
@@ -44,12 +43,8 @@ public class CreateDocument {
         File dataFile = new File(args[1]);
         File outputFile = new File(args[2]);
 
-        DocumentTemplate template = null;
-        if (templateFile.isDirectory()) {
-            template = new UnzippedDocumentTemplate(templateFile);
-        } else {
-            template = new ZippedDocumentTemplate(templateFile);
-        }
+        DocumentTemplateFactory documentTemplateFactory = new DocumentTemplateFactory();
+        DocumentTemplate template = documentTemplateFactory.getTemplate(templateFile);
         
         Object model = null;
         String dataFileExtension = FilenameUtils.getExtension(dataFile.getName());

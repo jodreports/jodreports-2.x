@@ -2,14 +2,14 @@ package net.sf.jooreports.templates.xmlfilters.tags;
 
 import net.sf.jooreports.templates.xmlfilters.AbstractInsertTag;
 import nu.xom.Element;
-import nu.xom.Text;
+import nu.xom.Comment;
 
 public class InsertAroundTag extends AbstractInsertTag implements JooScriptTag {
 
 	public void process(Element scriptElement, Element tagElement) {
-		Text beforeText = (Text) tagElement.getChild(0);
-		Text afterText = (Text) tagElement.getChild(2);
-		insertBefore(scriptElement, tagElement, (Text) beforeText.copy());
-		insertAfter(scriptElement, tagElement, (Text) afterText.copy());
+		Comment beforeComment = new Comment(tagElement.getChild(0).getValue());
+		Comment afterComment = new Comment(tagElement.getChild(2).getValue());
+		insertBefore(scriptElement, tagElement, (Comment) beforeComment.copy());
+		insertAfter(scriptElement, tagElement, (Comment) afterComment.copy());
 	}
 }

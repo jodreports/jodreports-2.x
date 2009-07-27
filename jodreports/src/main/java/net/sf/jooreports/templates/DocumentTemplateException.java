@@ -17,6 +17,8 @@ package net.sf.jooreports.templates;
 
 public class DocumentTemplateException extends Exception {
 
+	private static final long serialVersionUID = 1L;
+
 	public DocumentTemplateException(String message) {
         super(message);
     }

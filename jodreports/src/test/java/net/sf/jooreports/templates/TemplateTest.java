@@ -16,7 +16,6 @@
 package net.sf.jooreports.templates;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -32,7 +31,7 @@ public class TemplateTest extends AbstractTemplateTest {
         File templateFile = getTestFile("hello-template.odt");
         Map model = new HashMap();
         model.put("name", "Mirko");
-        String actual = processZippedTemplate(templateFile, model);
+        String actual = processTemplate(templateFile, model);
         assertEquals("output content", "Hello Mirko!", actual);
     }
 
@@ -40,7 +39,7 @@ public class TemplateTest extends AbstractTemplateTest {
         File templateDir = getTestFile("hello-template");
         Map model = new HashMap();
         model.put("name", "Mirko");
-        String actual = processUnzippedTemplate(templateDir, model);
+        String actual = processTemplate(templateDir, model);
         assertEquals("output content", "Hello Mirko!", actual);
     }
 
@@ -48,7 +47,7 @@ public class TemplateTest extends AbstractTemplateTest {
         File templateFile = getTestFile("hello-template.odt");
         Map model = new HashMap();
         model.put("name", "You&Me");
-        String actual = processZippedTemplate(templateFile, model);
+        String actual = processTemplate(templateFile, model);
         assertEquals("output content", "Hello You&Me!", actual);
     }
 
@@ -63,7 +62,7 @@ public class TemplateTest extends AbstractTemplateTest {
         Map model = new HashMap();
         model.put("name", "Mirko");
         try {
-            processZippedTemplate(templateFile, model);
+            processTemplate(templateFile, model);
             fail("undetected invalid reference to 'title' in styles.xml");
         } catch (DocumentTemplateException expected) { }
     }
@@ -72,7 +71,7 @@ public class TemplateTest extends AbstractTemplateTest {
         File templateFile = getTestFile("hebrew-template.odt");
         Map model = new HashMap();
         model.put("Text", "שלום");
-        String actual = processZippedTemplate(templateFile, model);
+        String actual = processTemplate(templateFile, model);
         assertEquals("output content", "A Hebrew Template\n\nטקסט עברי: שלום", actual);        
     }
 
@@ -95,11 +94,7 @@ public class TemplateTest extends AbstractTemplateTest {
         File templateFile = getTestFile("multiline-template.odt");
         Map model = new HashMap();
         model.put("text", "First line\nSecond line\nThird line");
-        File openDocumentFile = createTempFile(".odt");
-        DocumentTemplate template = new ZippedDocumentTemplate(new FileInputStream(templateFile));
-        template.createDocument(model, new FileOutputStream(openDocumentFile));
-        assertFileCreated(openDocumentFile);
-        String content = extractTextContent(openDocumentFile);        
+        String content = processTemplate(templateFile, model);
         String expected = "Multiline Text Test\n"
             +"\n"
             +"First line\n"
@@ -113,7 +108,8 @@ public class TemplateTest extends AbstractTemplateTest {
         Map model = new HashMap();
         model.put("text", "First line\nSecond line\nThird line");
         File openDocumentFile = createTempFile(".odt");
-        DocumentTemplate template = new ZippedDocumentTemplate(new FileInputStream(templateFile));
+        DocumentTemplateFactory documentTemplateFactory = new DocumentTemplateFactory();
+        DocumentTemplate template = documentTemplateFactory.getTemplate(templateFile);
         // do not escape newline as line-break
         template.setContentWrapper(new ContentWrapper() {
 			public String wrapContent(String content) {

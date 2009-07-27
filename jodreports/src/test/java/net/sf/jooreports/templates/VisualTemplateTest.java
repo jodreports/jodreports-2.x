@@ -29,7 +29,7 @@ public class VisualTemplateTest extends AbstractTemplateTest {
         Map model = new HashMap();
         model.put("field1", "First Value");
         model.put("field2", "Second Value");
-        String actual = processZippedTemplate(templateFile, model);
+        String actual = processTemplate(templateFile, model);
         String expected =
         	"1: First Value\n"+
         	"2: Second Value";
@@ -41,7 +41,16 @@ public class VisualTemplateTest extends AbstractTemplateTest {
         File templateFile = getTestFile("visual-script-setting-template.odt");
         Map model = new HashMap();
         model.put("value", new Double("7.5"));
-        String actual = processZippedTemplate(templateFile, model);
+        String actual = processTemplate(templateFile, model);
+        assertEquals("Number: 07.50", actual);
+    }
+
+    public void testOldScriptWithSetting() throws IOException, DocumentTemplateException {
+    	// template contains [#setting number_format="00.00"]
+        File templateFile = getTestFile("visual-old-script-setting-template.odt");
+        Map model = new HashMap();
+        model.put("value", new Double("7.5"));
+        String actual = processTemplate(templateFile, model);
         assertEquals("Number: 07.50", actual);
     }
 
@@ -62,7 +71,65 @@ public class VisualTemplateTest extends AbstractTemplateTest {
         three.put("value", new Integer(3));
         three.put("description", "three");
         items.add(three);
-        String actual = processZippedTemplate(templateFile, model);
+        String actual = processTemplate(templateFile, model);
+        String expected =
+        	"one\n" + "1\n"+
+        	"two\n" + "2\n"+
+        	"three\n" + "3\n"+
+        	"Total\n" + "6";
+        assertEquals(expected, actual);
+    }
+    
+    public void testScriptWithSpecialChars() throws IOException, DocumentTemplateException {
+        File templateFile = getTestFile("visual-script-special-chars-template.odt");
+        Map model = new HashMap();
+        List items = new ArrayList();
+        model.put("items", items);
+        Map one = new HashMap();
+        one.put("value", new Integer(1));
+        one.put("description", "one");
+        one.put("cond1", "yes");
+        one.put("cond2", "no");
+        items.add(one);
+        Map two = new HashMap();
+        two.put("value", new Integer(2));
+        two.put("description", "two");
+        two.put("cond1", "yes");
+        two.put("cond2", "yes");
+        items.add(two);
+        Map three = new HashMap();
+        three.put("value", new Integer(3));
+        three.put("description", "three");
+        three.put("cond1", "yes");
+        three.put("cond2", "no");
+        items.add(three);
+        String actual = processTemplate(templateFile, model);
+        String expected =
+        	"one\n" + "1\n"+
+        	"two\n" + "2\n"+
+        	"three\n" + "3\n"+
+        	"Total\n" + "2";
+        assertEquals(expected, actual);
+    }
+
+    public void testOldScriptForRepeatingTableRow() throws IOException, DocumentTemplateException {
+        File templateFile = getTestFile("visual-repeat-table-row-old-script-template.odt");
+        Map model = new HashMap();
+        List items = new ArrayList();
+        model.put("items", items);
+        Map one = new HashMap();
+        one.put("value", new Integer(1));
+        one.put("description", "one");
+        items.add(one);
+        Map two = new HashMap();
+        two.put("value", new Integer(2));
+        two.put("description", "two");
+        items.add(two);
+        Map three = new HashMap();
+        three.put("value", new Integer(3));
+        three.put("description", "three");
+        items.add(three);
+        String actual = processTemplate(templateFile, model);
         String expected =
         	"one\n" + "1\n"+
         	"two\n" + "2\n"+

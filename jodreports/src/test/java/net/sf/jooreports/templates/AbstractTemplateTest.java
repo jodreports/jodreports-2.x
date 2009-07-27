@@ -39,19 +39,12 @@ public abstract class AbstractTemplateTest extends TestCase {
 		}
 	}
 
-    protected String processZippedTemplate(File templateFile, Map model) throws IOException, DocumentTemplateException {
-        File openDocumentFile = createTempFile("odt");
+    protected String processTemplate(File templateFile, Map model) throws IOException, DocumentTemplateException {
+    	File openDocumentFile = createTempFile("odt");
         DocumentTemplate template = documentTemplateFactory.getTemplate(templateFile);
         template.createDocument(model, new FileOutputStream(openDocumentFile));
         assertFileCreated(openDocumentFile);
         return extractTextContent(openDocumentFile);
     }
 
-    protected String processUnzippedTemplate(File templateDir, Map model) throws IOException, DocumentTemplateException {
-        File openDocumentFile = createTempFile("odt");
-        DocumentTemplate template = documentTemplateFactory.getUnzippedTemplate(templateDir);
-        template.createDocument(model, new FileOutputStream(openDocumentFile));
-        assertFileCreated(openDocumentFile);
-        return extractTextContent(openDocumentFile);
-    }
 }

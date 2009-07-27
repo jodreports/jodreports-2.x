@@ -5,26 +5,26 @@ import net.sf.jooreports.templates.xmlfilters.tags.JooScriptTag;
 import nu.xom.Element;
 import nu.xom.Nodes;
 import nu.xom.ParentNode;
-import nu.xom.Text;
+import nu.xom.Comment;
 
 public abstract class AbstractInsertTag implements JooScriptTag {
 
 	public abstract void process(Element scriptElement, Element tagElement);
 
-	protected void insertBefore(Element scriptElement, Element tagElement, Text text) {
+	protected void insertBefore(Element scriptElement, Element tagElement, Comment comment) {
 		String tag = tagElement.getAttributeValue("element");
 		Element targetElement = findEnclosingElement(scriptElement, tag);
 		ParentNode parentNode = targetElement.getParent();
 		int parentIndex = parentNode.indexOf(targetElement);
-		parentNode.insertChild(text, parentIndex);
+		parentNode.insertChild(comment, parentIndex);
 	}
 
-	protected void insertAfter(Element scriptElement, Element tagElement, Text text) {
+	protected void insertAfter(Element scriptElement, Element tagElement, Comment comment) {
 		String tag = tagElement.getAttributeValue("element");
 		Element targetElement = findEnclosingElement(scriptElement, tag);
 		ParentNode parentNode = targetElement.getParent();
 		int parentIndex = parentNode.indexOf(targetElement);
-		parentNode.insertChild(text, parentIndex + 1);		
+		parentNode.insertChild(comment, parentIndex + 1);		
 	}
 
     private Element findEnclosingElement(Element element, String enclosingTagName) {

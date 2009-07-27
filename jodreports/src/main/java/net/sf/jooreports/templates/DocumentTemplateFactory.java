@@ -37,14 +37,15 @@ public class DocumentTemplateFactory {
 	}
 
 	public DocumentTemplate getTemplate(File file) throws IOException {
-		return getTemplate(new FileInputStream(file));
+		if (file.isDirectory()) {
+			return new UnzippedDocumentTemplate(file, freemarkerConfiguration);
+		} else {
+			return getTemplate(new FileInputStream(file));
+		}
 	}
 
 	public DocumentTemplate getTemplate(InputStream inputStream) throws IOException {
 		return new ZippedDocumentTemplate(inputStream, freemarkerConfiguration);
 	}
 
-	public DocumentTemplate getUnzippedTemplate(File templateDir) throws IOException {
-		return new UnzippedDocumentTemplate(templateDir, freemarkerConfiguration);
-	}
 }
