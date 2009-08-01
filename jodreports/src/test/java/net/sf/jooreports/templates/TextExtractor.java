@@ -76,6 +76,12 @@ public class TextExtractor extends DefaultHandler {
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		if ("text:p".equals(qName)) {
 			paragraphText = new StringBuffer();
+		} else if ("draw:frame".equals(qName)) {
+			String width = attributes.getValue("svg:width");
+			String height = attributes.getValue("svg:height");
+			if (width != null && height != null) {
+				write("[frame:" + width + "," + height + "]");
+			}
 		} else if ("draw:image".equals(qName)) {
 			String href = attributes.getValue("xlink:href");
 			if (href != null) {

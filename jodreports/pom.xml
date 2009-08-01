@@ -2,16 +2,16 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>net.sf.jooreports</groupId>
-  <artifactId>jooreports</artifactId>
+  <groupId>net.sf.jodreports</groupId>
+  <artifactId>jodreports</artifactId>
   <packaging>jar</packaging>
-  <name>JOOReports</name>
-  <version>2.1-SNAPSHOT</version>
+  <name>JODReports</name>
+  <version>2.1-RC</version>
   <description>
-    JOOReports generates dynamic documents and reports based on the
+    JODReports generates dynamic documents and reports based on the
     OpenDocument Format and FreeMarker.
   </description>
-  <url>http://jooreports.sourceforge.net/?q=jooreports</url>
+  <url>http://jodreports.sourceforge.net/</url>
   <licenses>
     <license>
       <name>GNU Lesser General Public License, Version 2.1</name>
@@ -19,9 +19,9 @@
     </license>
   </licenses>
   <scm>
-    <url>http://jooreports.cvs.sourceforge.net/jooreports/</url>
+    <url>http://jodreports.svn.sourceforge.net</url>
     <connection>
-      scm:cvs:pserver:anonymous@jooreports.cvs.sourceforge.net:/cvsroot/jooreports
+      https://jodreports.svn.sourceforge.net/svnroot/jodreports 
     </connection>
   </scm>
   <developers>
@@ -29,6 +29,11 @@
       <id>mnasato</id>
       <name>Mirko Nasato</name>
       <email>mirko@artofsolving.com</email>
+    </developer>
+    <developer>
+      <id>terryliang</id>
+      <name>Yongtai Liang</name>
+      <email>terry@polonious.com.au</email>
     </developer>
   </developers>
   <dependencies>
@@ -59,19 +64,19 @@
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
-      <version>1.2</version>
+      <version>1.4</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>freemarker</groupId>
+      <groupId>org.freemarker</groupId>
       <artifactId>freemarker</artifactId>
-      <version>2.3.8</version>
+      <version>2.3.15</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>xom</groupId>
       <artifactId>xom</artifactId>
-      <version>1.1</version>
+      <version>1.2</version>
       <scope>compile</scope>
       <exclusions>
         <exclusion>

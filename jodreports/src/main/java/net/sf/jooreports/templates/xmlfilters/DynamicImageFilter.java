@@ -36,14 +36,16 @@ public class DynamicImageFilter extends XmlEntryFilter {
 				continue;
 			}
 			String frameName = frameElement.getAttributeValue("name", OpenDocumentNamespaces.URI_DRAW);
-			if (frameName != null && frameName.startsWith(IMAGE_NAME_PREFIX) && frameName.endsWith(IMAGE_NAME_SUFFIX)) {
+			if (frameName != null && 
+					frameName.toLowerCase().startsWith(IMAGE_NAME_PREFIX) && 
+					frameName.endsWith(IMAGE_NAME_SUFFIX)) {
 				Attribute hrefAttribute = imageElement.getAttribute("href", OpenDocumentNamespaces.URI_XLINK);
 				String defaultImageName = hrefAttribute.getValue();
 				if (frameName.contains(",")) {
 					Attribute widthAttribute = frameElement.getAttribute("width", OpenDocumentNamespaces.URI_SVG);
 					Attribute heightAttribute = frameElement.getAttribute("height", OpenDocumentNamespaces.URI_SVG);
-					String maxSize = "," + widthAttribute.getValue().replace("cm", "") + "," + 
-											heightAttribute.getValue().replace("cm", "") + ",";
+					String maxSize = ",'" + widthAttribute.getValue().trim() + "','" + 
+											heightAttribute.getValue().trim() + "',";
 					String sizeParameters = frameName.replaceFirst(",", maxSize);
 					widthAttribute.setValue("${" + sizeParameters.replace(IMAGE_NAME_PREFIX, IMAGE_WIDTH_PREFIX+"'"+defaultImageName+"',") + "}");
 					heightAttribute.setValue("${" + sizeParameters.replace(IMAGE_NAME_PREFIX, IMAGE_HEIGHT_PREFIX+"'"+defaultImageName+"',") + "}");

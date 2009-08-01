@@ -22,17 +22,17 @@ public abstract class AbstractInputStreamImageSource implements ImageSource {
 		}
 	}
 	
-	public double getWidth() {
+	public int getWidth() {
 		try {
-			return (double)(ImageIO.read(getInputStream()).getWidth()/36);
-		} catch (Exception e) {}
+			return ImageIO.read(getInputStream()).getWidth();
+		} catch (IOException e) {}
 		return 0;
 	}
 
-	public double getHeight() {
+	public int getHeight() {
 		try {
-			return (double)(ImageIO.read(getInputStream()).getHeight()/36);
-		} catch (Exception e) {}
+			return ImageIO.read(getInputStream()).getHeight();
+		} catch (IOException e) {}
 		return 0;
 	}
 

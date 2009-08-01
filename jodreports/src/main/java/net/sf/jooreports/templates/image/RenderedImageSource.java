@@ -6,8 +6,6 @@ import java.io.OutputStream;
 
 import javax.imageio.ImageIO;
 
-import net.sf.jooreports.templates.TemplateFreemarkerNamespace;
-
 public class RenderedImageSource implements ImageSource {
 	
 	private final RenderedImage image;
@@ -20,12 +18,12 @@ public class RenderedImageSource implements ImageSource {
 		ImageIO.write(image, "png", outputStream);
 	}
 	
-	public double getWidth(){
-		return (double)(image.getWidth()/TemplateFreemarkerNamespace.sizeScale);
+	public int getWidth(){
+		return image.getWidth();
 	}
 
-	public double getHeight(){
-		return (double)(image.getHeight()/TemplateFreemarkerNamespace.sizeScale);
+	public int getHeight(){
+		return image.getHeight();
 	}
 
 }

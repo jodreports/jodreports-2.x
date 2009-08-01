@@ -1,8 +1,12 @@
 package net.sf.jooreports.templates;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import net.sf.jooreports.templates.image.FileImageSource;
 import net.sf.jooreports.templates.image.ImageSource;
@@ -15,8 +19,8 @@ import net.sf.jooreports.templates.image.ImageSource;
  */
 public class TemplateFreemarkerNamespace {
 
-	public static final String NAME = "template";
-	public static final double sizeScale = 37.8;
+	public static final String NAME = "jooscript";
+	private static final Log log = LogFactory.getLog(TemplateFreemarkerNamespace.class);
 
 	private int imageIndex = 0;
 	
@@ -59,67 +63,24 @@ public class TemplateFreemarkerNamespace {
 		return defaultImageName;
 	}
 
-	public String imageWidth(ImageSource imageSource, double maxWidth, double maxHeight, String format){
-		double width = getWidth(imageSource);
-		double height = getHeight(imageSource);
-		
-		if (width==0 || height==0) {
-			return maxWidth + "cm";
-		}
-		
-		double scaleWidth = (double) width/maxWidth;
-		double scaleHeight = (double) height/maxHeight;
-		double result = maxWidth;
-
-		if (format.toLowerCase().contains("original")) {
-			result = width;
-		} else if (format.toLowerCase().contains("shrink")) {
-			if (scaleWidth>1 && scaleWidth>scaleHeight) {
-				result = maxWidth;
-			} else if (scaleHeight>1 && scaleHeight>scaleWidth) {
-				result = (double) width/scaleHeight;
-			} else {
-				result = width;
-			}
-		} else if (format.toLowerCase().contains("scale")) {
-			if (scaleWidth<1 && scaleHeight<1 && scaleWidth<scaleHeight) {
-				result = (double) width/scaleHeight;
-			} else if (scaleWidth<1 && scaleHeight<1 && scaleHeight<scaleWidth) {
-				result = maxWidth;
-			} else {
-				result = width;
-			}
-		} else if (format.toLowerCase().contains("fit")) {
-			if (scaleWidth>1 && scaleWidth>scaleHeight) {
-				result = maxWidth;
-			} else if (scaleHeight>1 && scaleHeight>scaleWidth) {
-				result = (double)width/scaleHeight;
-			} else if (scaleWidth<1 && scaleHeight<1 && scaleWidth<scaleHeight) {
-				result = (double)width/scaleHeight;
-			} else if (scaleWidth<1 && scaleHeight<1 && scaleHeight<scaleWidth) {
-				result = maxWidth;
-			} else {
-				result = width;
-			}
-		}
-
-		return result+"cm";
+	public String imageWidth(ImageSource imageSource, String maxWidthStr, String maxHeightStr, String format){
+		return getRatioDimension(imageSource.getWidth(), imageSource.getHeight(), maxWidthStr, maxHeightStr, true, format);
 	}
-
-	public String imageWidth(String defaultImageName,ImageSource imageSource, double maxWidth, double maxHeight, String format){
+	
+	public String imageWidth(String defaultImageName,ImageSource imageSource, String maxWidth, String maxHeight, String format){
 		return imageWidth(imageSource, maxWidth, maxHeight, format);
 	}
 
-	public String imageWidth(String defaultImageName, String url, double maxWidth, double maxHeight, String format){
-		String result = maxWidth + "cm";
+	public String imageWidth(String defaultImageName, String url, String maxWidth, String maxHeight, String format){
+		String result = maxWidth;
 		if (new File(url).exists()) {
 			result = imageWidth(new FileImageSource(url), maxWidth, maxHeight, format);
 		}
 		return result;
 	}
 
-	public String imageWidth(String defaultImageName, Object object, double maxWidth, double maxHeight, String format){
-		String result = maxWidth + "cm";
+	public String imageWidth(String defaultImageName, Object object, String maxWidth, String maxHeight, String format){
+		String result = maxWidth;
 		if (object!=null) {
 			if (object.getClass().isInstance(String.class)) {
 				result = imageWidth(new FileImageSource((String)object), maxWidth, maxHeight, format);
@@ -130,67 +91,24 @@ public class TemplateFreemarkerNamespace {
 		return result;
 	}
 
-	public String imageHeight(ImageSource imageSource, double maxWidth, double maxHeight, String format){
-		double width = getWidth(imageSource);
-		double height = getHeight(imageSource);
-		
-		if (width==0 || height==0) {
-			return maxHeight + "cm";
-		}
-		
-		double scaleWidth = (double) width/maxWidth;
-		double scaleHeight = (double) height/maxHeight;
-		double result = maxHeight;
-
-		if (format.toLowerCase().contains("original")) {
-			result = height;
-		} else if (format.toLowerCase().contains("shrink")) {
-			if (scaleHeight>1 && scaleHeight>scaleWidth) {
-				result = maxHeight;
-			} else if (scaleWidth>1 && scaleWidth>scaleHeight) {
-				result = (double) height/scaleWidth;
-			} else {
-				result = height;
-			}
-		} else if (format.toLowerCase().contains("scale")) {
-			if (scaleHeight<1 && scaleWidth<1 && scaleHeight<scaleWidth) {
-				result = (double) height/scaleWidth;
-			} else if (scaleHeight<1 && scaleWidth<1 && scaleWidth<scaleHeight) {
-				result = maxHeight;
-			} else {
-				result = height;
-			}
-		} else if (format.toLowerCase().contains("fit")) {
-			if (scaleHeight>1 && scaleHeight>scaleWidth) {
-				result = maxHeight;
-			} else if (scaleWidth>1 && scaleWidth>scaleHeight) {
-				result = (double) height/scaleWidth;
-			} else if (scaleHeight<1 && scaleWidth<1 && scaleHeight<scaleWidth) {
-				result = (double) height/scaleWidth;
-			} else if (scaleHeight<1 && scaleWidth<1 && scaleWidth<scaleHeight) {
-				result = maxHeight;
-			} else {
-				result = height;
-			}
-		}
-
-		return result+"cm";
+	public String imageHeight(ImageSource imageSource, String maxWidthStr, String maxHeightStr, String format){
+		return getRatioDimension(imageSource.getHeight(), imageSource.getWidth(), maxHeightStr, maxWidthStr, false, format);
 	}
 
-	public String imageHeight(String defaultImageName,ImageSource imageSource, double maxWidth, double maxHeight, String format){
+	public String imageHeight(String defaultImageName,ImageSource imageSource, String maxWidth, String maxHeight, String format){
 		return imageHeight(imageSource, maxWidth, maxHeight, format);
 	}
 
-	public String imageHeight(String defaultImageName, String url, double maxWidth, double maxHeight, String format){
-		String result = maxHeight + "cm";
+	public String imageHeight(String defaultImageName, String url, String maxWidth, String maxHeight, String format){
+		String result = maxHeight;
 		if (new File(url).exists()) {
 			result = imageHeight(new FileImageSource(url), maxWidth, maxHeight, format);
 		}
 		return result;
 	}
 
-	public String imageHeight(String defaultImageName, Object object, double maxWidth, double maxHeight, String format){
-		String result = maxHeight + "cm";
+	public String imageHeight(String defaultImageName, Object object, String maxWidth, String maxHeight, String format){
+		String result = maxHeight;
 		if (object!=null) {
 			if (object.getClass().isInstance(String.class)) {
 				result = imageHeight(new FileImageSource((String)object), maxWidth, maxHeight, format);
@@ -201,12 +119,25 @@ public class TemplateFreemarkerNamespace {
 		return result;
 	}
 
-	private double getWidth(ImageSource imageSource){
-		return (double)imageSource.getWidth()/sizeScale;
+	private String getRatioDimension(int dimX, int dimY, String maxDimXStr, String maxDimYStr, boolean isWidth, String format){
+		String result = maxDimXStr;
+		if (dimX>0 && dimY>0 && maxDimXStr.length()>2 && maxDimYStr.length()>2) {
+			String unit = maxDimXStr.substring(maxDimXStr.length()-2);
+			try {
+				double maxDimX=Double.parseDouble(maxDimXStr.substring(0, maxDimXStr.length()-2));
+				double maxDimY=Double.parseDouble(maxDimYStr.substring(0, maxDimYStr.length()-2));
+				double maxRatio = (double) maxDimX / maxDimY;
+				double ratio = (double) dimX / dimY;
+				if (ratio!=0 && (format.equalsIgnoreCase("Max"+(isWidth?"Height":"Width"))) 
+						|| (format.equalsIgnoreCase("fit") && ratio<maxRatio)) {
+					result = new DecimalFormat("#.##").format(maxDimY * ratio) + unit;
+				}
+			} catch (NumberFormatException nfException) {
+				log.error("Cannot get image dimension", nfException);
+			} catch (ArithmeticException aException) {
+				log.error("Cannot divide by 0", aException);
+			}
+		}
+		return result;
 	}
-	
-	private double getHeight(ImageSource imageSource){
-		return (double)imageSource.getHeight()/sizeScale;
-	}
-	
 }

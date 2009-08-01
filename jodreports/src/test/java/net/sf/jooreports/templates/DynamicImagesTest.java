@@ -54,16 +54,16 @@ public class DynamicImagesTest extends AbstractTemplateTest {
 			"Picture\n" +
 			"Description\n" + 
 			"Quantity\n" +
-			"[img:Pictures/dynamic-image-1.png]\n" +
+			"[frame:1.409cm,0.706cm][img:Pictures/dynamic-image-1.png]\n" +
 			"First Item\n" +
 			"20\n" +
-			"[img:Pictures/dynamic-image-2.png]\n" +
+			"[frame:1.409cm,0.706cm][img:Pictures/dynamic-image-2.png]\n" +
 			"Second Item\n" +
 			"15\n" +
-			"[img:Pictures/dynamic-image-1.png]\n" +
+			"[frame:1.409cm,0.706cm][img:Pictures/dynamic-image-1.png]\n" +
 			"Third Item\n" +
 			"50\n" +
-			"[img:Pictures/dynamic-image-3.png]\n" +
+			"[frame:1.409cm,0.706cm][img:Pictures/dynamic-image-3.png]\n" +
 			"Fourth Item\n" +
 			"20";			
 		assertEquals("incorrect output", expected, content);		
@@ -108,16 +108,16 @@ public class DynamicImagesTest extends AbstractTemplateTest {
 			"Picture\n" +
 			"Description\n" + 
 			"Quantity\n" +
-			"[img:Pictures/dynamic-image-1.png]\n" +
+			"[frame:1.409cm,0.706cm][img:Pictures/dynamic-image-1.png]\n" +
 			"First Item\n" +
 			"20\n" +
-			"[img:Pictures/dynamic-image-2.png]\n" +
+			"[frame:1.409cm,0.706cm][img:Pictures/dynamic-image-2.png]\n" +
 			"Second Item\n" +
 			"15\n" +
-			"[img:Pictures/dynamic-image-1.png]\n" +
+			"[frame:1.409cm,0.706cm][img:Pictures/dynamic-image-1.png]\n" +
 			"Third Item\n" +
 			"50\n" +
-			"[img:Pictures/dynamic-image-3.png]\n" +
+			"[frame:1.409cm,0.706cm][img:Pictures/dynamic-image-3.png]\n" +
 			"Fourth Item\n" +
 			"20";			
 		assertEquals("incorrect output", expected, content);		
@@ -160,16 +160,16 @@ public class DynamicImagesTest extends AbstractTemplateTest {
 			"Picture\n" +
 			"Description\n" + 
 			"Quantity\n" +
-			"[img:Pictures/dynamic-image-1.png]\n" +
+			"[frame:1.409cm,0.706cm][img:Pictures/dynamic-image-1.png]\n" +
 			"First Item\n" +
 			"20\n" +
-			"[img:Pictures/dynamic-image-2.png]\n" +
+			"[frame:1.409cm,0.706cm][img:Pictures/dynamic-image-2.png]\n" +
 			"Second Item\n" +
 			"15\n" +
-			"[img:Pictures/1000000000000028000000145B20E0B1.png]\n" +
+			"[frame:1.409cm,0.706cm][img:Pictures/1000000000000028000000145B20E0B1.png]\n" +
 			"Third Item\n" +
 			"50\n" +
-			"[img:Pictures/1000000000000028000000145B20E0B1.png]\n" +
+			"[frame:1.409cm,0.706cm][img:Pictures/1000000000000028000000145B20E0B1.png]\n" +
 			"Fourth Item\n" +
 			"20";			
 		assertEquals("incorrect output", expected, content);		
@@ -214,18 +214,51 @@ public class DynamicImagesTest extends AbstractTemplateTest {
 			"Picture\n" +
 			"Description\n" + 
 			"Quantity\n" +
-			"[img:Pictures/dynamic-image-1.png]\n" +
+			"[frame:8.999cm,4.5cm][img:Pictures/dynamic-image-1.png]\n" +
 			"First Item\n" +
 			"20\n" +
-			"[img:Pictures/dynamic-image-2.png]\n" +
+			"[frame:8.999cm,4.5cm][img:Pictures/dynamic-image-2.png]\n" +
 			"Second Item\n" +
 			"15\n" +
-			"[img:Pictures/dynamic-image-1.png]\n" +
+			"[frame:8.999cm,4.5cm][img:Pictures/dynamic-image-1.png]\n" +
 			"Third Item\n" +
 			"50\n" +
-			"[img:Pictures/dynamic-image-3.png]\n" +
+			"[frame:8.999cm,4.5cm][img:Pictures/dynamic-image-3.png]\n" +
 			"Fourth Item\n" +
 			"20";			
 		assertEquals("incorrect output", expected, content);		
+	}
+	
+	public void testImageResize() throws Exception {
+		File templateFile = getTestFile("images-resize-template.odt");
+        Map model = new HashMap();
+        model.put("coinsV", new FileImageSource("src/test/resources/coinsV.jpg"));
+        model.put("coinsH", new FileImageSource("src/test/resources/coinsH.jpg"));
+        model.put("earthV", new ClasspathImageSource("earthV.jpg"));
+        model.put("earthH", new ClasspathImageSource("earthH.jpg"));
+        String actual = processTemplate(templateFile, model);
+		String expected =
+			"Default\n" +
+			"[frame:2.54cm,2.54cm][img:Pictures/dynamic-image-1.png]\n" +
+			"[frame:2.54cm,2.54cm][img:Pictures/dynamic-image-2.png]\n" +
+			"[frame:2.54cm,2.54cm][img:Pictures/dynamic-image-3.png]\n" +
+			"[frame:2.54cm,2.54cm][img:Pictures/dynamic-image-4.png]\n" +
+			"MaxWidth\n" +
+			"[frame:2.54cm,1.57cm][img:Pictures/dynamic-image-1.png]\n" +
+			"[frame:2.54cm,4.12cm][img:Pictures/dynamic-image-2.png]\n" +
+			"[frame:2.54cm,1.9cm][img:Pictures/dynamic-image-3.png]\n" +
+			"[frame:2.54cm,3.39cm][img:Pictures/dynamic-image-4.png]\n" +
+			"MaxHeight\n" +
+			"[frame:4.12cm,2.54cm][img:Pictures/dynamic-image-1.png]\n" +
+			"[frame:1.57cm,2.54cm][img:Pictures/dynamic-image-2.png]\n" +
+			"[frame:3.39cm,2.54cm][img:Pictures/dynamic-image-3.png]\n" +
+			"[frame:1.9cm,2.54cm][img:Pictures/dynamic-image-4.png]\n" +
+			"Fit\n" +
+			"[frame:2.54cm,1.57cm][img:Pictures/dynamic-image-1.png]\n" +
+			"[frame:1.57cm,2.54cm][img:Pictures/dynamic-image-2.png]\n" +
+			"[frame:2.54cm,1.9cm][img:Pictures/dynamic-image-3.png]\n" +
+			"[frame:1.9cm,2.54cm][img:Pictures/dynamic-image-4.png]";			
+        
+        assertEquals("output content", expected, actual);
 	}
 }
