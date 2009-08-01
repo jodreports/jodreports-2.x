@@ -1,12 +1,24 @@
 <?xml version="1.0"?>
 <project>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>net.sf.jooreports</groupId>
-  <artifactId>jooreports-webapp</artifactId>
-  <version>2.1-SNAPSHOT</version>
+  <groupId>net.sf.jodreports</groupId>
+  <artifactId>jodreports-webapp</artifactId>
+  <version>2.1-RC</version>
   <packaging>war</packaging>
-  <name>JOOReports Sample Web Application</name>
-  <url>http://jooreports.sourceforge.net/?q=jooreports</url>
+  <name>JODReports Sample Web Application</name>
+  <url>http://jodreports.sourceforge.net/</url>
+  <developers>
+    <developer>
+      <id>mnasato</id>
+      <name>Mirko Nasato</name>
+      <email>mirko@artofsolving.com</email>
+    </developer>
+    <developer>
+      <id>terryliang</id>
+      <name>Yongtai Liang</name>
+      <email>terry@polonious.com.au</email>
+    </developer>
+  </developers>
   <dependencies>
     <dependency>
       <groupId>commons-logging</groupId>
@@ -38,8 +50,8 @@
         <version>2.2.2</version>
     </dependency>
     <dependency>
-      <groupId>net.sf.jooreports</groupId>
-      <artifactId>jooreports</artifactId>
+      <groupId>net.sf.jodreports</groupId>
+      <artifactId>jodreports</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
