@@ -15,6 +15,8 @@
 //
 package net.sf.jooreports.templates.xmlfilters;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -77,7 +79,13 @@ public class ScriptTagFilter extends XmlEntryFilter {
 				}
 				scriptElement.detach();
 			} else {
-				scriptElement.getParent().replaceChild(scriptElement,new Comment(addScriptDirectives(scriptElement)));
+				try {
+					scriptElement.getParent().replaceChild(scriptElement,new Comment(addScriptDirectives(scriptElement)));
+				} catch (IOException ioException) {
+					log.error("unable to parse script: '"+scriptElement.getValue()+"'; ignoring", ioException);
+					scriptElement.detach();
+				}
+				
 			}
 		}
 	}
@@ -127,7 +135,7 @@ public class ScriptTagFilter extends XmlEntryFilter {
 	 * @return the text that should replace the input field
 	 * @throws DocumentTemplateException 
 	 */
-	private static String addScriptDirectives(Element scriptElement) throws DocumentTemplateException {
+	private static String addScriptDirectives(Element scriptElement) throws IOException, DocumentTemplateException {
 		String scriptReplacement = "";
 		
 		List scriptParts = parseScriptParts(scriptElement.getValue());
@@ -156,27 +164,23 @@ public class ScriptTagFilter extends XmlEntryFilter {
 		return scriptReplacement;		
 	}
 
-	private static List/*<ScriptPart>*/ parseScriptParts(String scriptText) throws DocumentTemplateException {
+	private static List/*<ScriptPart>*/ parseScriptParts(String scriptText) throws IOException, DocumentTemplateException {
 		List scriptParts = new ArrayList();
+		BufferedReader stringReader = new BufferedReader(new StringReader(scriptText));
 		ScriptPart scriptPart = new ScriptPart();
 		scriptParts.add(scriptPart);
-		
-		if (scriptText!=null){
-			String[] scriptLines = scriptText.split("\n");
-			for (int index = 0; index < scriptLines.length; index++) {
-				String line = scriptLines[index];
-				if (line.startsWith("@")) {
-					String location = line.trim().substring(1);
-					scriptPart = new ScriptPart(location);
-					scriptParts.add(scriptPart);
-				} else {
-	            	scriptPart.appendText(line.replaceFirst("^\\[#--", "[#noparse]").
-	            			replaceFirst("--\\]$", "[/#noparse]").
-	            			replace("--", "\\x002d\\x002d"));
-				}
+		for (String line; (line = stringReader.readLine()) != null;) {
+			line = line.trim();
+			if (line.startsWith("@")) {
+				String location = line.substring(1);
+				scriptPart = new ScriptPart(location);
+				scriptParts.add(scriptPart);
+			} else {
+            	scriptPart.appendText(line.replaceFirst("^\\[#--", "[#noparse]").
+            			replaceFirst("--\\]$", "[/#noparse]").
+            			replace("--", "\\x002d\\x002d"));
 			}
 		}
-		
 		return scriptParts;
 	}
 
