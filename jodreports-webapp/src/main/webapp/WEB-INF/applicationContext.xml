@@ -14,7 +14,7 @@
 		</constructor-arg>
 	</bean>
 
-	<bean id="documentFormatRegistry" class="com.artofsolving.jodconverter.XmlDocumentFormatRegistry"/>
+	<bean id="documentFormatRegistry" class="com.artofsolving.jodconverter.DefaultDocumentFormatRegistry"/>
 
 	<bean id="documentConverter" class="com.artofsolving.jodconverter.openoffice.converter.OpenOfficeDocumentConverter">
 		<constructor-arg index="0">
