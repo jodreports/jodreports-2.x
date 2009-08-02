@@ -53,12 +53,10 @@ public class TemplateFreemarkerNamespace {
 	}
 
 	public String image(String defaultImageName, Object object){
-		if (object!=null) {
-			if (object.getClass().isInstance(String.class)) {
-				defaultImageName = image(new FileImageSource((String)object));
-			} else if (object.getClass().isInstance(ImageSource.class)) {
-				defaultImageName = image((ImageSource)object);
-			}
+		if (object instanceof String) {
+			defaultImageName = image(new FileImageSource((String)object));
+		} else if (object instanceof ImageSource) {
+			defaultImageName = image((ImageSource)object);
 		}
 		return defaultImageName;
 	}
@@ -81,12 +79,10 @@ public class TemplateFreemarkerNamespace {
 
 	public String imageWidth(String defaultImageName, Object object, String maxWidth, String maxHeight, String format){
 		String result = maxWidth;
-		if (object!=null) {
-			if (object.getClass().isInstance(String.class)) {
-				result = imageWidth(new FileImageSource((String)object), maxWidth, maxHeight, format);
-			} else if (object.getClass().isInstance(ImageSource.class)) {
-				result = imageWidth((ImageSource)object, maxWidth, maxHeight, format);
-			}
+		if (object instanceof String) {
+			result = imageWidth(new FileImageSource((String)object), maxWidth, maxHeight, format);
+		} else if (object instanceof ImageSource) {
+			result = imageWidth((ImageSource)object, maxWidth, maxHeight, format);
 		}
 		return result;
 	}
@@ -109,12 +105,10 @@ public class TemplateFreemarkerNamespace {
 
 	public String imageHeight(String defaultImageName, Object object, String maxWidth, String maxHeight, String format){
 		String result = maxHeight;
-		if (object!=null) {
-			if (object.getClass().isInstance(String.class)) {
-				result = imageHeight(new FileImageSource((String)object), maxWidth, maxHeight, format);
-			} else if (object.getClass().isInstance(ImageSource.class)) {
-				result = imageHeight((ImageSource)object, maxWidth, maxHeight, format);
-			}
+		if (object instanceof String) {
+			result = imageHeight(new FileImageSource((String)object), maxWidth, maxHeight, format);
+		} else if (object instanceof ImageSource) {
+			result = imageHeight((ImageSource)object, maxWidth, maxHeight, format);
 		}
 		return result;
 	}
