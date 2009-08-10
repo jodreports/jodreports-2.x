@@ -4,7 +4,7 @@ import net.sf.jooreports.templates.xmlfilters.AbstractInsertTag;
 import nu.xom.Element;
 import nu.xom.Comment;
 
-public class InsertAfterTag extends AbstractInsertTag implements JooScriptTag {
+public class InsertAfterTag extends AbstractInsertTag {
 
 	public void process(Element scriptElement, Element tagElement) {
 		Comment comment = new Comment(tagElement.getValue());

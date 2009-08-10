@@ -45,9 +45,9 @@ public class TemplateFreemarkerNamespace {
 		return image(imageWriter);
 	}
 
-	public String image(String defaultImageName, String url){
-		if (new File(url).exists()) {
-			defaultImageName = image(new FileImageSource(url));
+	public String image(String defaultImageName, String fileName){
+		if (new File(fileName).exists()) {
+			defaultImageName = image(new FileImageSource(fileName));
 		}
 		return defaultImageName;
 	}
@@ -69,10 +69,10 @@ public class TemplateFreemarkerNamespace {
 		return imageWidth(imageSource, maxWidth, maxHeight, format);
 	}
 
-	public String imageWidth(String defaultImageName, String url, String maxWidth, String maxHeight, String format){
+	public String imageWidth(String defaultImageName, String fileName, String maxWidth, String maxHeight, String format){
 		String result = maxWidth;
-		if (new File(url).exists()) {
-			result = imageWidth(new FileImageSource(url), maxWidth, maxHeight, format);
+		if (new File(fileName).exists()) {
+			result = imageWidth(new FileImageSource(fileName), maxWidth, maxHeight, format);
 		}
 		return result;
 	}
@@ -95,10 +95,10 @@ public class TemplateFreemarkerNamespace {
 		return imageHeight(imageSource, maxWidth, maxHeight, format);
 	}
 
-	public String imageHeight(String defaultImageName, String url, String maxWidth, String maxHeight, String format){
+	public String imageHeight(String defaultImageName, String fileName, String maxWidth, String maxHeight, String format){
 		String result = maxHeight;
-		if (new File(url).exists()) {
-			result = imageHeight(new FileImageSource(url), maxWidth, maxHeight, format);
+		if (new File(fileName).exists()) {
+			result = imageHeight(new FileImageSource(fileName), maxWidth, maxHeight, format);
 		}
 		return result;
 	}
