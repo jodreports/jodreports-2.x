@@ -123,7 +123,7 @@ public class DynamicImagesTest extends AbstractTemplateTest {
 		assertEquals("incorrect output", expected, content);		
 	}
 	
-	public void testOrderFormWithImageUrl() throws Exception {
+	public void testImageSourceWithFileName() throws Exception {
 		File templateFile = getTestFile("order-with-images-template.odt");
 		
 		ImageSource blue = new FileImageSource("src/test/resources/blue.png");
