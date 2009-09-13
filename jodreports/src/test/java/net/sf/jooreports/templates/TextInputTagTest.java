@@ -20,8 +20,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * test input field tags <tt>&lt;text:text-input text-description="JOOScript"&gt;...&lt;/text:text-input&gt;</tt>
+ */
 public class TextInputTagTest extends AbstractTemplateTest {
 
+	/**
+	 * input field with content <tt>$name</tt>
+	 */
     public void testVariable() throws IOException, DocumentTemplateException {
         File templateFile = getTestFile("textinput-variable-template.odt");
         Map model = new HashMap();
@@ -30,14 +36,9 @@ public class TextInputTagTest extends AbstractTemplateTest {
         assertEquals("output content", "Hello Mirko!", actual);
     }
     
-    public void testVariableWithSpecialChars() throws IOException, DocumentTemplateException {
-        File templateFile = getTestFile("textinput-variable-special-template.odt");
-        Map model = new HashMap();
-        model.put("name", "You&Me");
-        String actual = processTemplate(templateFile, model);
-        assertEquals("output content", "Hello You&Me! He&She!", actual);
-    }
-
+	/**
+	 * input field with content <tt>[#assign title='Mr.']</tt>
+	 */
     public void testDirective() throws IOException, DocumentTemplateException {
         File templateFile = getTestFile("textinput-directive-template.odt");
         Map model = new HashMap();
@@ -46,6 +47,10 @@ public class TextInputTagTest extends AbstractTemplateTest {
         assertEquals("output content", "Hello Mr. Mirko!", actual);
     }
 
+	/**
+	 * input fields for directive in one line<p> 
+	 * <tt>[#if showname=='Yes']...[/#if]</tt>
+	 */
     public void testDirectivesInOneLine() throws IOException, DocumentTemplateException {
         File templateFile = getTestFile("textinput-directives-oneline-template.odt");
         Map model = new HashMap();
@@ -55,6 +60,14 @@ public class TextInputTagTest extends AbstractTemplateTest {
         assertEquals("output content", "Hello Mirko!", actual);
     }
 
+	/**
+	 * input fields for directive in split lines<p>
+	 * <tt>[#if showname='Yes']</tt><br>
+	 * ...<br>
+	 * <tt>[#else]</tt><br>
+	 * ...<br>
+	 * <tt>[/#if]</tt><br>
+	 */
     public void testDirectivesInSplitLine() throws IOException, DocumentTemplateException {
         File templateFile = getTestFile("textinput-directives-splitline-template.odt");
         Map model = new HashMap();
@@ -64,6 +77,10 @@ public class TextInputTagTest extends AbstractTemplateTest {
         assertEquals("output content", "Hello Mirko!", actual);
     }
 
+	/**
+	 * input field for directive contains "&amp;"<p> 
+	 * <tt>[#if (cond1=='pass' && cond2=='pass')]</tt>
+	 */
     public void testDirectiveWithSpecialChars() throws IOException, DocumentTemplateException {
         File templateFile = getTestFile("textinput-directives-special-chars-template.odt");
         Map model = new HashMap();
@@ -73,6 +90,14 @@ public class TextInputTagTest extends AbstractTemplateTest {
         assertEquals("output content", "All passed!", actual);
     }
 
+	/**
+	 * input fields for directive "switch"<p>
+	 * <tt>[#switch option][#case '1']</tt><br>
+	 * ...<br>
+	 * <tt>[#break]</tt><br>
+	 * ...<br>
+	 * <tt>[/#switch]</tt><br>
+	 */
     public void testDirectivesSwitch() throws IOException, DocumentTemplateException {
         File templateFile = getTestFile("textinput-directives-switch-template.odt");
         Map model = new HashMap();

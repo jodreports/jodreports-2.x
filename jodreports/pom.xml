@@ -21,7 +21,7 @@
   <scm>
     <url>http://jodreports.svn.sourceforge.net</url>
     <connection>
-      https://jodreports.svn.sourceforge.net/svnroot/jodreports 
+    	scm:svn:https://jodreports.svn.sourceforge.net/svnroot/jodreports/tags/jodreports_2.1rc
     </connection>
   </scm>
   <developers>
@@ -132,23 +132,6 @@
           </archive>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-clover-plugin</artifactId>
-        <configuration>
-          <licenseLocation>
-            ${user.home}/.m2/clover.license
-          </licenseLocation>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>pre-site</phase>
-            <goals>
-              <goal>instrument</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
   <reporting>
@@ -160,10 +143,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-report-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-clover-plugin</artifactId>
       </plugin>
     </plugins>
   </reporting>

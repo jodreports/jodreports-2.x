@@ -39,7 +39,7 @@ public class UnzippedDocumentTemplate extends AbstractDocumentTemplate {
 	}
 
 	/**
-	 * @deprecated since 2.1 use {@link DocumentTemplateFactory#getUnzippedTemplate(File)}
+	 * @deprecated since 2.1 use {@link DocumentTemplateFactory#getTemplate(File)}
 	 */
     public UnzippedDocumentTemplate(File directory) throws IOException {
         if (!(directory.isDirectory() && directory.canRead())) {

@@ -11,7 +11,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Processes content.xml for dynamic images
+ * Processes content.xml for dynamic images<p>
+ * Only images enclosed in a draw:frame with a name starting with {@link #IMAGE_NAME_PREFIX} and ending with {@link #IMAGE_NAME_SUFFIX} will be processed
  */
 public class DynamicImageFilter extends XmlEntryFilter {
 
@@ -20,9 +21,15 @@ public class DynamicImageFilter extends XmlEntryFilter {
 	 * this prefix will be processed 
 	 */
 	public static final String IMAGE_NAME_PREFIX = TemplateFreemarkerNamespace.NAME + ".image(";
+
+	/**
+	 * Only images enclosed in a draw:frame with a name ending with
+	 * this suffix will be processed 
+	 */
 	public static final String IMAGE_NAME_SUFFIX = ")";
-	public static final String IMAGE_WIDTH_PREFIX 		= TemplateFreemarkerNamespace.NAME + ".imageWidth(";
-	public static final String IMAGE_HEIGHT_PREFIX 		= TemplateFreemarkerNamespace.NAME + ".imageHeight(";
+
+	private static final String IMAGE_WIDTH_PREFIX	= TemplateFreemarkerNamespace.NAME + ".imageWidth(";
+	private static final String IMAGE_HEIGHT_PREFIX = TemplateFreemarkerNamespace.NAME + ".imageHeight(";
 
 	private static final Log log = LogFactory.getLog(DynamicImageFilter.class);
 
@@ -47,12 +54,15 @@ public class DynamicImageFilter extends XmlEntryFilter {
 					String maxSize = ",'" + widthAttribute.getValue().trim() + "','" + 
 											heightAttribute.getValue().trim() + "',";
 					String sizeParameters = frameName.replaceFirst(",", maxSize);
-					widthAttribute.setValue("${" + sizeParameters.replace(IMAGE_NAME_PREFIX, IMAGE_WIDTH_PREFIX+"'"+defaultImageName+"',") + "}");
-					heightAttribute.setValue("${" + sizeParameters.replace(IMAGE_NAME_PREFIX, IMAGE_HEIGHT_PREFIX+"'"+defaultImageName+"',") + "}");
+					widthAttribute.setValue("${" + sizeParameters.replace(IMAGE_NAME_PREFIX, 
+							IMAGE_WIDTH_PREFIX+"'"+defaultImageName+"',") + "}");
+					heightAttribute.setValue("${" + sizeParameters.replace(IMAGE_NAME_PREFIX, 
+							IMAGE_HEIGHT_PREFIX+"'"+defaultImageName+"',") + "}");
 
 					frameName = frameName.split(",")[0] + IMAGE_NAME_SUFFIX;
 				}
-				hrefAttribute.setValue("${" + frameName.replace(IMAGE_NAME_PREFIX, IMAGE_NAME_PREFIX+"'"+defaultImageName+"',") + "}");
+				hrefAttribute.setValue("${" + frameName.replace(IMAGE_NAME_PREFIX, 
+						IMAGE_NAME_PREFIX+"'"+defaultImageName+"',") + "}");
 			}
 		}
 	}

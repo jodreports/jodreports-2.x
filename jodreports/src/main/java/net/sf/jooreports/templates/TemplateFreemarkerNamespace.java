@@ -15,7 +15,7 @@ import net.sf.jooreports.templates.image.ImageSource;
  * Contains utility methods that can be invoked in the template from FreeMarker. 
  * <p>
  * An instance of this class is automatically made available to the template
- * as a predefined FreeMarker variable named "template". 
+ * as a predefined FreeMarker variable named "JOOScript". 
  */
 public class TemplateFreemarkerNamespace {
 

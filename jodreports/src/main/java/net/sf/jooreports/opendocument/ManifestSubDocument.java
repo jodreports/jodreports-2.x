@@ -30,7 +30,7 @@ public class ManifestSubDocument {
 	public void addFileEntry(String mediaType, String fullPath) {
 		Element manifest = document.getRootElement();
 		Element fileEntry = new Element("manifest:file-entry", OpenDocumentNamespaces.URI_MANIFEST);
-		fileEntry.addAttribute(new Attribute("manifest:media-type", OpenDocumentNamespaces.URI_MANIFEST, "image/png"));
+		fileEntry.addAttribute(new Attribute("manifest:media-type", OpenDocumentNamespaces.URI_MANIFEST, mediaType));
 		fileEntry.addAttribute(new Attribute("manifest:full-path", OpenDocumentNamespaces.URI_MANIFEST, fullPath));
 		manifest.appendChild(fileEntry);
 	}

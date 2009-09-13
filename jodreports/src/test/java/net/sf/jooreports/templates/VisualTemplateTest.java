@@ -24,6 +24,11 @@ import java.util.Map;
 
 public class VisualTemplateTest extends AbstractTemplateTest {
 
+	/**
+	 * template contains input fields:
+	 * <tt>[description:field1,content:field one] [description:field2,content:field two]</tt>
+	 * @deprecated use {@link TextInputTagTest#testVariable()}
+	 */
 	public void testVisualFields() throws IOException, DocumentTemplateException {
         File templateFile = getTestFile("visual-fields-template.odt");
         Map model = new HashMap();
@@ -36,8 +41,10 @@ public class VisualTemplateTest extends AbstractTemplateTest {
         assertEquals(expected, actual);
     }
 
+	/**
+	 * template contains <tt>[#setting number_format="00.00"]</tt>
+	 */
     public void testScriptWithSetting() throws IOException, DocumentTemplateException {
-    	// template contains [#setting number_format="00.00"]
         File templateFile = getTestFile("visual-script-setting-template.odt");
         Map model = new HashMap();
         model.put("value", new Double("7.5"));
@@ -45,15 +52,20 @@ public class VisualTemplateTest extends AbstractTemplateTest {
         assertEquals("Number: 07.50", actual);
     }
 
-    public void testOldScriptWithSetting() throws IOException, DocumentTemplateException {
-    	// template contains [#setting number_format="00.00"]
-        File templateFile = getTestFile("visual-old-script-setting-template.odt");
+	/**
+	 * template contains <tt>[#setting number_format="00.00"]</tt> in new JOOScript style
+	 */
+    public void testNewScriptWithSetting() throws IOException, DocumentTemplateException {
+        File templateFile = getTestFile("visual-script-setting-template-2.odt");
         Map model = new HashMap();
         model.put("value", new Double("7.5"));
         String actual = processTemplate(templateFile, model);
         assertEquals("Number: 07.50", actual);
     }
 
+	/**
+	 * template contains <tt>[#list items as item]</tt>
+	 */
     public void testScriptForRepeatingTableRow() throws IOException, DocumentTemplateException {
         File templateFile = getTestFile("visual-repeat-table-row-template.odt");
         Map model = new HashMap();
@@ -79,7 +91,39 @@ public class VisualTemplateTest extends AbstractTemplateTest {
         	"Total\n" + "6";
         assertEquals(expected, actual);
     }
+
+	/**
+	 * template contains <tt>[#list items as item]</tt> in new JOOScript style
+	 */
+    public void testNewScriptForRepeatingTableRow() throws IOException, DocumentTemplateException {
+        File templateFile = getTestFile("visual-repeat-table-row-template-2.odt");
+        Map model = new HashMap();
+        List items = new ArrayList();
+        model.put("items", items);
+        Map one = new HashMap();
+        one.put("value", new Integer(1));
+        one.put("description", "one");
+        items.add(one);
+        Map two = new HashMap();
+        two.put("value", new Integer(2));
+        two.put("description", "two");
+        items.add(two);
+        Map three = new HashMap();
+        three.put("value", new Integer(3));
+        three.put("description", "three");
+        items.add(three);
+        String actual = processTemplate(templateFile, model);
+        String expected =
+        	"one\n" + "1\n"+
+        	"two\n" + "2\n"+
+        	"three\n" + "3\n"+
+        	"Total\n" + "6";
+        assertEquals(expected, actual);
+    }
     
+	/**
+	 * template contains <tt>[#if (item.cond1=='yes' && item.cond2=='yes')]</tt>
+	 */
     public void testScriptWithSpecialChars() throws IOException, DocumentTemplateException {
         File templateFile = getTestFile("visual-script-special-chars-template.odt");
         Map model = new HashMap();
@@ -109,32 +153,6 @@ public class VisualTemplateTest extends AbstractTemplateTest {
         	"two\n" + "2\n"+
         	"three\n" + "3\n"+
         	"Total\n" + "2";
-        assertEquals(expected, actual);
-    }
-
-    public void testOldScriptForRepeatingTableRow() throws IOException, DocumentTemplateException {
-        File templateFile = getTestFile("visual-repeat-table-row-old-script-template.odt");
-        Map model = new HashMap();
-        List items = new ArrayList();
-        model.put("items", items);
-        Map one = new HashMap();
-        one.put("value", new Integer(1));
-        one.put("description", "one");
-        items.add(one);
-        Map two = new HashMap();
-        two.put("value", new Integer(2));
-        two.put("description", "two");
-        items.add(two);
-        Map three = new HashMap();
-        three.put("value", new Integer(3));
-        three.put("description", "three");
-        items.add(three);
-        String actual = processTemplate(templateFile, model);
-        String expected =
-        	"one\n" + "1\n"+
-        	"two\n" + "2\n"+
-        	"three\n" + "3\n"+
-        	"Total\n" + "6";
         assertEquals(expected, actual);
     }
 }

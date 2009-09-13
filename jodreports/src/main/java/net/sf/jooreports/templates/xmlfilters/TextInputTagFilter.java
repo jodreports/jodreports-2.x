@@ -23,11 +23,12 @@ import nu.xom.ParentNode;
 import nu.xom.Text;
 
 /**
- * OpenDocument XML file filter that replaces text-input elements with FreeMarker expressions.
- * <p> 
- * For example
- * <tt>&lt;text:text-input text-description="user.name"&gt;Joe&lt;/text:text-input&gt;</tt>
- * becomes <tt>${user.name}</tt>.
+ * OpenDocument XML file filter that replaces text-input elements with FreeMarker expressions.<p> 
+ * For example:<p>
+ * <tt>&lt;text:text-input text-description="JOOScript"&gt;$user.name&lt;/text:text-input&gt;</tt>
+ * becomes <tt>${user.name}</tt>.<p>
+ * <tt>&lt;text:text-input text-description="JOOScript"&gt;[#assign title='Mr.']&lt;/text:text-input&gt;</tt>
+ * becomes <tt>[#assign title='Mr.']</tt>.
  */
 public class TextInputTagFilter extends XmlEntryFilter {
 

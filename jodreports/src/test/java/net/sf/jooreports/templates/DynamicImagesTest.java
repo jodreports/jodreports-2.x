@@ -69,8 +69,8 @@ public class DynamicImagesTest extends AbstractTemplateTest {
 		assertEquals("incorrect output", expected, content);		
 	}
 
-	public void testOldScriptOrderForm() throws Exception {
-		File templateFile = getTestFile("order-with-images-old-script-template.odt");
+	public void testNewScriptOrderForm() throws Exception {
+		File templateFile = getTestFile("order-with-images-template-2.odt");
 		
 		ImageSource red = new RenderedImageSource(ImageIO.read(new File("src/test/resources/red.png")));
 		ImageSource blue = new FileImageSource("src/test/resources/blue.png");
