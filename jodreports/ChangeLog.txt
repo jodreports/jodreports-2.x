@@ -1,0 +1,87 @@
+2.1 
+---
+
+ * fixed problem with dynamic images while using element as fileName
+
+2.1 release candidate
+---------------------
+
+ * introduce DocumentTemplateFactory
+
+ * support custom FreeMarker configuration
+
+ * input fields with description "JOOScript" can now be used to insert FreeMarker variables or directives
+
+ * support dynamic images in a draw:frame with a name "JOOScript.image($variable)"
+
+2.0.1
+-----
+
+ * fixed problem with XML escaping in JOOScript 
+ 
+ * fixed double-hyphen escaping problem in JOOScript
+ 
+ * FreeMarker directive "Comment" in JOOScript MUST start at the beginning of the line and finish at the end.  
+
+2.0.0
+-----
+
+ * fixed problem with character encoding on platforms where UTF-8 is not the default
+
+2.0 release candidate 2
+-----------------------
+
+ * scripts (of type "JOOScript") can now be used to insert FreeMarker directives
+   directly in Writer - no need to edit XML by hand anymore!
+
+ * input fields can now be used instead of ${..} notation for FreeMarker expressions
+
+ * converter module split into the separate project "JOOConverter" and included
+   as a dependency
+
+ * replaced DocumentTemplate.setImage() with a more flexible ImageProvider interface
+   that can be passed to an overloaded createDocument()
+
+ * images are now specified by their name (Pictures... / Options / Name), not
+   by their internal OOo filename
+
+ * re-introduced DocumentTemplate.setContentWrapper() by user request
+
+ * new method DocumentTemplate.setXmlEntries() allows users to customise which
+   entries are processed
+
+
+2.0 release candidate 1
+-----------------------
+
+Templates
+
+ * FreeMarker 2.3.4 alternative syntax ([#if] instead of <#if>) is now the default
+ * a global jooreports.properties can be used to customize default FreeMarker directives
+
+Tests
+
+ * PDFBox is now used to extract text from PDFs
+
+
+2.0 beta 3
+----------
+
+ Converter
+
+ * auto-reconnect in AbstractOpenOfficeConnection#getService()
+
+ Templates
+
+ * report sample embedding dynamic image
+
+2.0 beta 2
+-----------
+
+ Templates
+
+ * embedded images support - DocumentTemplate#addImage()
+ * support for non-Western charsets fixing UTF-8 bug (thanks to Youval Bronicki)
+ * DocumentTemplate#setContentWrapper() for custom FreeMarker directives
+   (e.g. rendering "\n" as "<text:line-break/>" as requested by Youval Bronicki)
+ * DocumentTemplate#createDocument() now throws DocumentTemplateException

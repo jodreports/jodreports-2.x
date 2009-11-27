@@ -37,7 +37,7 @@ public abstract class AbstractDocumentTemplate implements DocumentTemplate {
 
 	};
 	
-	private final Configuration freemarkerConfiguration;;
+	private final Configuration freemarkerConfiguration;
 	private ContentWrapper contentWrapper = DEFAULT_CONTENT_WRAPPER;
 	private String[] xmlEntries = new String[] {
 		"content.xml",
