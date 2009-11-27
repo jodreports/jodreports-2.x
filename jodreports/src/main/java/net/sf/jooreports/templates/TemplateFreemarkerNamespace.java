@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.w3c.dom.Element;
 
 import net.sf.jooreports.templates.image.FileImageSource;
 import net.sf.jooreports.templates.image.ImageSource;
@@ -54,9 +55,11 @@ public class TemplateFreemarkerNamespace {
 
 	public String image(String defaultImageName, Object object){
 		if (object instanceof String) {
-			defaultImageName = image(new FileImageSource((String)object));
+			defaultImageName = image(defaultImageName, (String)object);
 		} else if (object instanceof ImageSource) {
 			defaultImageName = image((ImageSource)object);
+		} else if (object instanceof Element) {
+			defaultImageName = image(defaultImageName, ((Element)object).getTextContent());
 		}
 		return defaultImageName;
 	}
