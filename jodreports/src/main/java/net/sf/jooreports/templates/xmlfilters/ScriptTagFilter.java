@@ -35,6 +35,7 @@ import nu.xom.Element;
 import nu.xom.Elements;
 import nu.xom.Nodes;
 import nu.xom.ParentNode;
+import nu.xom.Text;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -50,6 +51,8 @@ import org.apache.commons.logging.LogFactory;
 public class ScriptTagFilter extends XmlEntryFilter {
 
 	private static final Log log = LogFactory.getLog(ScriptTagFilter.class);
+	
+	private static final String SCRIPT_OUTPUT_TEMP_VARIABLE_NAME = "SCRIPT_OUTPUT_TEMP_VARIABLE_NAME";
 	
 	private final Map/*<String,JooScriptTag>*/ tags;
 	
@@ -80,7 +83,16 @@ public class ScriptTagFilter extends XmlEntryFilter {
 				scriptElement.detach();
 			} else {
 				try {
-					scriptElement.getParent().replaceChild(scriptElement,new Comment(addScriptDirectives(scriptElement)));
+					String script = addScriptDirectives(scriptElement);
+					if (!script.equals("")) {
+						scriptElement.getParent().insertChild(new Text("${"+SCRIPT_OUTPUT_TEMP_VARIABLE_NAME+"}"), 
+								scriptElement.getParent().indexOf(scriptElement)+1);
+						scriptElement.getParent().replaceChild(scriptElement, 
+								new Comment("[#assign "+SCRIPT_OUTPUT_TEMP_VARIABLE_NAME+"]"+script+"[/#assign]"));
+					}
+					else {
+						scriptElement.detach();
+					}
 				} catch (IOException ioException) {
 					log.error("unable to parse script: '"+scriptElement.getValue()+"'; ignoring", ioException);
 					scriptElement.detach();
