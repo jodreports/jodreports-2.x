@@ -26,6 +26,7 @@ import java.util.Map;
 
 import net.sf.jooreports.opendocument.ManifestSubDocument;
 import net.sf.jooreports.opendocument.OpenDocumentArchive;
+import net.sf.jooreports.opendocument.SettingsSubDocument;
 import net.sf.jooreports.templates.image.ImageSource;
 
 import org.apache.commons.io.IOUtils;
@@ -44,10 +45,13 @@ class TemplateAndModelMerger {
 
 	private final Configuration freemarkerConfiguration;
 	private final String[] xmlEntries;
+	private final Map openDocumentSettings;
 
-	public TemplateAndModelMerger(Configuration freemarkerConfiguration, String[] xmlEntries) {
+	public TemplateAndModelMerger(Configuration freemarkerConfiguration, String[] xmlEntries, 
+			Map openDocumentSettings) {
 		this.freemarkerConfiguration = freemarkerConfiguration;
 		this.xmlEntries = xmlEntries;
+		this.openDocumentSettings = openDocumentSettings;
 	}
 
 	public void process(OpenDocumentArchive archive, Object model) throws IOException, DocumentTemplateException {
@@ -78,6 +82,9 @@ class TemplateAndModelMerger {
 		if (!predefinedNamespace.getImages().isEmpty()) { 
 			addRequiredImages(archive, predefinedNamespace.getImages());
 		}
+		if (openDocumentSettings.size()>0) {
+			changeOpenDocumentSettings(archive);
+		}
 	}
 
 	private void addRequiredImages(OpenDocumentArchive archive, Map images) throws IOException {
@@ -96,6 +103,18 @@ class TemplateAndModelMerger {
 
 		OutputStream outputStream = archive.getEntryOutputStream(OpenDocumentArchive.ENTRY_MANIFEST);
 		manifest.save(outputStream);
+		outputStream.close();
+	}
+	
+	private void changeOpenDocumentSettings(OpenDocumentArchive archive) throws IOException{
+		InputStream inputStream = archive.getEntryInputStream(OpenDocumentArchive.ENTRY_SETTINGS);
+		SettingsSubDocument settings = new SettingsSubDocument(inputStream);
+		inputStream.close();
+
+		settings.changeSettings(openDocumentSettings);
+
+		OutputStream outputStream = archive.getEntryOutputStream(OpenDocumentArchive.ENTRY_SETTINGS);
+		settings.save(outputStream);
 		outputStream.close();
 	}
 }

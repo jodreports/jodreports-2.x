@@ -18,6 +18,7 @@ public class OpenDocumentArchive {
 	
 	public static final String ENTRY_CONTENT = "content.xml";
 	public static final String ENTRY_MANIFEST = "META-INF/manifest.xml";
+	public static final String ENTRY_SETTINGS = "settings.xml";
 
 	private Map/*<String,byte[]>*/ entries = new LinkedHashMap();
 

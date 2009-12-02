@@ -18,6 +18,8 @@ package net.sf.jooreports.templates;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import net.sf.jooreports.opendocument.OpenDocumentArchive;
 import net.sf.jooreports.opendocument.OpenDocumentIO;
@@ -45,6 +47,8 @@ public abstract class AbstractDocumentTemplate implements DocumentTemplate {
 	};
 	private OpenDocumentArchive preProcessedTemplate;
 	
+	private Map openDocumentSettings = new HashMap();
+	
 	public AbstractDocumentTemplate() {
 		this(DEFAULT_FREEMARKER_CONFIGURATION);
 	}
@@ -64,12 +68,17 @@ public abstract class AbstractDocumentTemplate implements DocumentTemplate {
 
     protected abstract OpenDocumentArchive getOpenDocumentArchive();
 
+	public void setOpenDocumentSettings(Map openDocumentSettings) {
+		this.openDocumentSettings = openDocumentSettings;
+	}
+
     public void createDocument(Object model, OutputStream output) throws IOException, DocumentTemplateException {
     	if (preProcessedTemplate == null) {
     		preProcess();
     	}
     	OpenDocumentArchive outputArchive = preProcessedTemplate.createCopy();
-    	TemplateAndModelMerger templateAndModelMerger = new TemplateAndModelMerger(freemarkerConfiguration, xmlEntries);
+    	TemplateAndModelMerger templateAndModelMerger = new TemplateAndModelMerger(freemarkerConfiguration, xmlEntries, 
+    			openDocumentSettings);
     	templateAndModelMerger.process(outputArchive, model);
     	
     	OpenDocumentIO.writeZip(outputArchive, output);

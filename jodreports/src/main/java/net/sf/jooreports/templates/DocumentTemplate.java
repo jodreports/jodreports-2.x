@@ -17,6 +17,7 @@ package net.sf.jooreports.templates;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Map;
 
 public interface DocumentTemplate {
 
@@ -55,6 +56,8 @@ public interface DocumentTemplate {
 	 */
     public void setContentWrapper(ContentWrapper contentWrapper);
 
+    public void setOpenDocumentSettings(Map openDocumentSettings);
+    
     /**
      * Merge the data model into this template and create the output document.
      * 
