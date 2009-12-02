@@ -1,4 +1,4 @@
-This is JODReports version 2.1, released on 2009-11-27
+This is JODReports version 2.2, released on 2009-12-02
 
 Please see
 

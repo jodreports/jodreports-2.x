@@ -1,3 +1,10 @@
+2.2 
+---
+
+ * fixed problem with script output in JOOScript 
+
+ * support custom Open Document Settings
+
 2.1 
 ---
 
