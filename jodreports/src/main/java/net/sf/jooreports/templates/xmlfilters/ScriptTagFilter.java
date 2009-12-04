@@ -88,7 +88,8 @@ public class ScriptTagFilter extends XmlEntryFilter {
 						scriptElement.getParent().insertChild(new Text("${"+SCRIPT_OUTPUT_TEMP_VARIABLE_NAME+"}"), 
 								scriptElement.getParent().indexOf(scriptElement)+1);
 						scriptElement.getParent().replaceChild(scriptElement, 
-								new Comment("[#assign "+SCRIPT_OUTPUT_TEMP_VARIABLE_NAME+"]"+script+"[/#assign]"));
+								new Comment("[#attempt][#assign "+SCRIPT_OUTPUT_TEMP_VARIABLE_NAME+"][#noescape]"+script+"[/#noescape][/#assign]"+
+										"[#recover][#assign "+SCRIPT_OUTPUT_TEMP_VARIABLE_NAME+"='']"+script+"[/#attempt]"));
 					}
 					else {
 						scriptElement.detach();
