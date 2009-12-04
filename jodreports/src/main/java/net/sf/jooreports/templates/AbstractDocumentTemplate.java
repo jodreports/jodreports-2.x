@@ -39,7 +39,7 @@ public abstract class AbstractDocumentTemplate implements DocumentTemplate {
 
 	};
 	
-	private final Configuration freemarkerConfiguration;
+	private Configuration freemarkerConfiguration;
 	private ContentWrapper contentWrapper = DEFAULT_CONTENT_WRAPPER;
 	private String[] xmlEntries = new String[] {
 		"content.xml",
@@ -89,4 +89,8 @@ public abstract class AbstractDocumentTemplate implements DocumentTemplate {
     	TemplatePreProcessor templatePreProcessor = new TemplatePreProcessor(xmlEntries, contentWrapper);
     	templatePreProcessor.process(preProcessedTemplate);
     }
+
+	public void setFreemarkerConfiguration(Configuration freemarkerConfiguration) {
+		this.freemarkerConfiguration = freemarkerConfiguration;
+	}
 }
