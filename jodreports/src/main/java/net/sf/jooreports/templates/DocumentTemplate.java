@@ -19,8 +19,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
 
-import freemarker.template.Configuration;
-
 public interface DocumentTemplate {
 
 	public interface ContentWrapper {
@@ -59,8 +57,6 @@ public interface DocumentTemplate {
     public void setContentWrapper(ContentWrapper contentWrapper);
 
     public void setOpenDocumentSettings(Map openDocumentSettings);
-    
-    public void setFreemarkerConfiguration(Configuration freemarkerConfiguration);
     
     /**
      * Merge the data model into this template and create the output document.
