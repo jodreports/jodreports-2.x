@@ -1,3 +1,10 @@
+2.2.1 
+---
+
+ * fixed resize problem with dynamic images while using element as fileName
+ 
+ * fixed XML escape problem with script output in JOOScript
+
 2.2 
 ---
 
