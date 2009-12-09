@@ -58,7 +58,8 @@ public class DynamicImageFilter extends XmlEntryFilter {
 							IMAGE_WIDTH_PREFIX+"'"+defaultImageName+"',") + "}");
 					heightAttribute.setValue("${" + sizeParameters.replace(IMAGE_NAME_PREFIX, 
 							IMAGE_HEIGHT_PREFIX+"'"+defaultImageName+"',") + "}");
-
+					System.out.println("widthAttribute:"+widthAttribute.getValue());
+					System.out.println("heightAttribute:"+heightAttribute.getValue());
 					frameName = frameName.split(",")[0] + IMAGE_NAME_SUFFIX;
 				}
 				hrefAttribute.setValue("${" + frameName.replace(IMAGE_NAME_PREFIX, 

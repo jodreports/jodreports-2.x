@@ -86,6 +86,8 @@ public class TemplateFreemarkerNamespace {
 			result = imageWidth(new FileImageSource((String)object), maxWidth, maxHeight, format);
 		} else if (object instanceof ImageSource) {
 			result = imageWidth((ImageSource)object, maxWidth, maxHeight, format);
+		} else if (object instanceof Element) {
+			result = imageWidth(new FileImageSource(((Element)object).getTextContent()), maxWidth, maxHeight, format);
 		}
 		return result;
 	}
@@ -112,6 +114,8 @@ public class TemplateFreemarkerNamespace {
 			result = imageHeight(new FileImageSource((String)object), maxWidth, maxHeight, format);
 		} else if (object instanceof ImageSource) {
 			result = imageHeight((ImageSource)object, maxWidth, maxHeight, format);
+		} else if (object instanceof Element) {
+			result = imageHeight(new FileImageSource(((Element)object).getTextContent()), maxWidth, maxHeight, format);
 		}
 		return result;
 	}
