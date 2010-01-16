@@ -10,6 +10,7 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -77,23 +78,34 @@ public class OpenDocumentIO {
 		Set entryNames = archive.getEntryNames();
 		
 		// OpenDocument spec requires 'mimetype' to be the first entry
-		writeZipEntry(zipOutputStream, archive, "mimetype");
+		writeZipEntry(zipOutputStream, archive, "mimetype", ZipEntry.STORED);
 		
 		for (Iterator it = entryNames.iterator(); it.hasNext();) {
 			String entryName = (String) it.next();
 			if (!"mimetype".equals(entryName)) {
-				writeZipEntry(zipOutputStream, archive, entryName);
+				writeZipEntry(zipOutputStream, archive, entryName, ZipEntry.DEFLATED);
 			}
 		}
 		zipOutputStream.close();
 	}
 
-	private static void writeZipEntry(ZipOutputStream zipOutputStream, OpenDocumentArchive archive, String entryName) throws IOException {
+	private static void writeZipEntry(ZipOutputStream zipOutputStream, OpenDocumentArchive archive, String entryName, int method) throws IOException {
 		ZipEntry zipEntry = new ZipEntry(entryName);
 		zipOutputStream.putNextEntry(zipEntry);
 		InputStream entryInputStream = archive.getEntryInputStream(entryName);
-		IOUtils.copy(entryInputStream, zipOutputStream);
-		entryInputStream.close();
+		zipEntry.setMethod(method);
+		if (method == ZipEntry.STORED) {
+			byte[] inputBytes = IOUtils.toByteArray(entryInputStream);
+			CRC32 crc = new CRC32();
+			crc.update(inputBytes);
+			zipEntry.setCrc(crc.getValue());
+			zipEntry.setSize(inputBytes.length);
+			zipEntry.setCompressedSize(inputBytes.length);
+			IOUtils.write(inputBytes, zipOutputStream);
+		} else {
+			IOUtils.copy(entryInputStream, zipOutputStream);
+		}
+		IOUtils.closeQuietly(entryInputStream);
 		zipOutputStream.closeEntry();
 	}
 }
