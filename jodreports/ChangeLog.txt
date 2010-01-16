@@ -1,3 +1,10 @@
+2.2.2
+---
+
+ * fix default locale bug in unit test
+ 
+ * fix compress method bug in mimetype entry of output ODF files
+
 2.2.1 
 ---
 
