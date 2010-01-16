@@ -27,8 +27,10 @@ public class DocumentTemplateFactory {
 	 * {@link Configuration}, and they will apply to all templates returned by
 	 * this factory.
 	 * <p>
-	 * Any such customizations should be made right after initializaion, before
-	 * using this factory to create any template.
+	 * Any such customizations should be used carefully. 
+	 * Only use this method if you know what you are doing. 
+	 * Limitation: Do not change the default square-bracket Tag Syntax.  
+	 * 
 	 * 
 	 * @return the FreeMarker {@link Configuration} 
 	 */
