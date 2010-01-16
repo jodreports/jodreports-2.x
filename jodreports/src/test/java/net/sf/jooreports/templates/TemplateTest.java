@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import net.sf.jooreports.templates.DocumentTemplate.ContentWrapper;
@@ -79,6 +80,7 @@ public class TemplateTest extends AbstractTemplateTest {
     	File templateFile = getTestFile("number-template.odt");
     	DocumentTemplateFactory documentTemplateFactory = new DocumentTemplateFactory();
     	Configuration freemarkerConfiguration = documentTemplateFactory.getFreemarkerConfiguration();
+    	freemarkerConfiguration.setLocale(Locale.US);
     	freemarkerConfiguration.setNumberFormat("#,##0.00");
         Map model = new HashMap();
         model.put("number", new Integer(1000));

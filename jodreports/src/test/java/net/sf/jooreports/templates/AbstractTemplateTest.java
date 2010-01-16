@@ -3,6 +3,7 @@ package net.sf.jooreports.templates;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Map;
 
 import junit.framework.TestCase;
@@ -15,6 +16,7 @@ public abstract class AbstractTemplateTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		documentTemplateFactory = new DocumentTemplateFactory();
+		documentTemplateFactory.getFreemarkerConfiguration().setLocale(Locale.US);
 	}
 	
 	protected File getTestFile(String fileName) {
