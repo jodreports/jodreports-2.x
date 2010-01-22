@@ -10,6 +10,7 @@ import java.util.Enumeration;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 import junit.framework.TestCase;
 
@@ -69,11 +70,17 @@ public class OpenDocumentIOTest extends TestCase {
 		OpenDocumentIO.writeZip(archive, new FileOutputStream(documentFile));
 		assertTrue("file not created", documentFile.exists() && documentFile.length() > 0);
 		
-		ZipFile zipFile = new ZipFile(documentFile);
-		Enumeration zipEntries = zipFile.entries();
-		assertTrue("zip file has no entries", zipEntries.hasMoreElements());
-		ZipEntry firstEntry = (ZipEntry) zipEntries.nextElement();
+		ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(documentFile));
+		ZipEntry firstEntry = zipInputStream.getNextEntry();
+		assertNotNull("zip file has no entries", firstEntry);
 		assertEquals("first entry not 'mimetype' as required by OpenDocument", "mimetype", firstEntry.getName());
+		assertEquals("first entry compressed", ZipEntry.STORED, firstEntry.getMethod());
+
+		// Added by NetForce1 to verify crc-correctness
+		String mimetype = IOUtils.toString(zipInputStream);
+		assertEquals("mimetype content", "application/x-test", mimetype);
+		
+		zipInputStream.close();
 		
 		documentFile.delete();
 	}
