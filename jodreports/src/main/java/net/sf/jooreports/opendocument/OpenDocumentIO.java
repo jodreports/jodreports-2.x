@@ -91,7 +91,6 @@ public class OpenDocumentIO {
 
 	private static void writeZipEntry(ZipOutputStream zipOutputStream, OpenDocumentArchive archive, String entryName, int method) throws IOException {
 		ZipEntry zipEntry = new ZipEntry(entryName);
-		zipOutputStream.putNextEntry(zipEntry);
 		InputStream entryInputStream = archive.getEntryInputStream(entryName);
 		zipEntry.setMethod(method);
 		if (method == ZipEntry.STORED) {
@@ -101,8 +100,10 @@ public class OpenDocumentIO {
 			zipEntry.setCrc(crc.getValue());
 			zipEntry.setSize(inputBytes.length);
 			zipEntry.setCompressedSize(inputBytes.length);
+			zipOutputStream.putNextEntry(zipEntry);
 			IOUtils.write(inputBytes, zipOutputStream);
 		} else {
+			zipOutputStream.putNextEntry(zipEntry);
 			IOUtils.copy(entryInputStream, zipOutputStream);
 		}
 		IOUtils.closeQuietly(entryInputStream);
