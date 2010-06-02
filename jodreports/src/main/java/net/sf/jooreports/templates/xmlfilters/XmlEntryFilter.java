@@ -16,7 +16,10 @@
 package net.sf.jooreports.templates.xmlfilters;
 
 import net.sf.jooreports.templates.DocumentTemplateException;
+import net.sf.jooreports.templates.TemplateFreemarkerNamespace;
+import nu.xom.Comment;
 import nu.xom.Document;
+import nu.xom.Node;
 import nu.xom.XPathContext;
 
 /**
@@ -43,5 +46,11 @@ public abstract class XmlEntryFilter {
 	}
 
 	public abstract void doFilter(Document document) throws DocumentTemplateException;
+	
+	protected static Node newNode(String script){
+		return new Comment(" ${"+TemplateFreemarkerNamespace.NAME+".doubleHyphen}>" + 
+				script.replace("--", "\\x002d\\x002d") +
+				"<!${"+TemplateFreemarkerNamespace.NAME+".doubleHyphen} ");
+	}
 
 }

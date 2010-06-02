@@ -122,9 +122,9 @@ public class VisualTemplateTest extends AbstractTemplateTest {
     }
     
 	/**
-	 * template contains <tt>[#if (item.cond1=='yes' && item.cond2=='yes')]</tt>
+	 * template contains <tt>[#if (item.cond1=='yes' && item.cond2=='--')]</tt> in JooScript for directive condition
 	 */
-    public void testScriptWithSpecialChars() throws IOException, DocumentTemplateException {
+    public void testScriptWithSpecialCharsInDirective() throws IOException, DocumentTemplateException {
         File templateFile = getTestFile("visual-script-special-chars-template.odt");
         Map model = new HashMap();
         List items = new ArrayList();
@@ -139,7 +139,7 @@ public class VisualTemplateTest extends AbstractTemplateTest {
         two.put("value", new Integer(2));
         two.put("description", "two");
         two.put("cond1", "yes");
-        two.put("cond2", "yes");
+        two.put("cond2", "--");
         items.add(two);
         Map three = new HashMap();
         three.put("value", new Integer(3));
@@ -153,6 +153,51 @@ public class VisualTemplateTest extends AbstractTemplateTest {
         	"two\n" + "2\n"+
         	"three\n" + "3\n"+
         	"Total\n" + "2";
+        assertEquals(expected, actual);
+    }
+
+    /**
+	 * template contains special characters in JooScript for output
+	 */
+    public void testScriptWithSpecialCharsForOutput() throws IOException, DocumentTemplateException {
+        File templateFile = getTestFile("visual-script-special-chars-output-template.odt");
+        Map model = new HashMap();
+        model.put("value", "<!@#$%^&*-->");
+        model.put("JooScriptNullDevice", "fdsfdfs");
+        String actual = processTemplate(templateFile, model);
+        assertEquals("Value: <!@#$%^&*-->", actual);
+    }
+
+	/**
+	 * template contains jooscript for changing tag attribute <tt>syntax: @#location \n attributeName=value</tt>
+	 */
+    public void testScriptForTableSpanRow() throws IOException, DocumentTemplateException {
+        File templateFile = getTestFile("visual-table-span-row-template.odt");
+        Map model = new HashMap();
+        List items = new ArrayList();
+        model.put("items", items);
+        Map one = new HashMap();
+        one.put("col1", "cell 1a");
+        one.put("col2", "cell 1b");
+        one.put("rowspan", Integer.valueOf(2));
+        items.add(one);
+        Map two = new HashMap();
+        two.put("col1", "cell 2a");
+        two.put("col2", "cell 2b");
+        two.put("rowspan", Integer.valueOf(0));
+        items.add(two);
+        Map three = new HashMap();
+        three.put("col1", "cell 3a");
+        three.put("col2", "cell 3b");
+        three.put("rowspan", Integer.valueOf(1));
+        items.add(three);
+        String actual = processTemplate(templateFile, model);
+        String expected =
+        	"cell 1a\n"+
+			"cell 1b\n"+
+			"cell 2b\n"+
+			"cell 3a\n"+
+			"cell 3b";
         assertEquals(expected, actual);
     }
 }

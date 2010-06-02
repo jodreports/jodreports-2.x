@@ -27,6 +27,10 @@ public class TemplateFreemarkerNamespace {
 	
 	private Map/*<ImageWriter,String>*/ images = new HashMap();
 
+	public String getDoubleHyphen() {
+		return "--";
+	}
+
 	public String image(ImageSource imageWriter) {
 		if (images.containsKey(imageWriter)) {
 			return (String) images.get(imageWriter);

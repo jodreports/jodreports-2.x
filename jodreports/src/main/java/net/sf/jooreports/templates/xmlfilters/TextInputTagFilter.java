@@ -15,7 +15,6 @@
 //
 package net.sf.jooreports.templates.xmlfilters;
 
-import nu.xom.Comment;
 import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Nodes;
@@ -36,7 +35,8 @@ public class TextInputTagFilter extends XmlEntryFilter {
 		Nodes textInputNodes = document.query("//text:text-input", XPATH_CONTEXT);
 		for (int nodeIndex = 0; nodeIndex < textInputNodes.size(); nodeIndex++) {
 			Element textInputElement = (Element) textInputNodes.get(nodeIndex);
-			String expression = textInputElement.getAttributeValue("description", TEXT_NAMESPACE).trim();
+			String expression = textInputElement.getAttributeValue("description", 
+					textInputElement.getNamespaceURI()).trim();
 			if (expression.equalsIgnoreCase("jooscript")) {
 				String value = textInputElement.getValue();
 				if (value.startsWith("${")) {
@@ -46,7 +46,7 @@ public class TextInputTagFilter extends XmlEntryFilter {
 					while (childNode.getParent().getChildCount()==1) {
 						childNode = childNode.getParent();
 					}
-					childNode.getParent().replaceChild(childNode, new Comment(value.replace("--", "\\x002d\\x002d")));
+					childNode.getParent().replaceChild(childNode, newNode(value));
 				}
 			} else {
 				if (expression.length()>0 && !expression.startsWith("${")) {

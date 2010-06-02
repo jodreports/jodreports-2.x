@@ -28,14 +28,13 @@ import net.sf.jooreports.templates.xmlfilters.tags.InsertAfterTag;
 import net.sf.jooreports.templates.xmlfilters.tags.InsertAroundTag;
 import net.sf.jooreports.templates.xmlfilters.tags.InsertBeforeTag;
 import net.sf.jooreports.templates.xmlfilters.tags.JooScriptTag;
+import nu.xom.Attribute;
 import nu.xom.Builder;
-import nu.xom.Comment;
 import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Elements;
 import nu.xom.Nodes;
 import nu.xom.ParentNode;
-import nu.xom.Text;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -52,8 +51,6 @@ public class ScriptTagFilter extends XmlEntryFilter {
 
 	private static final Log log = LogFactory.getLog(ScriptTagFilter.class);
 	
-	private static final String SCRIPT_OUTPUT_TEMP_VARIABLE_NAME = "SCRIPT_OUTPUT_TEMP_VARIABLE_NAME";
-	
 	private final Map/*<String,JooScriptTag>*/ tags;
 	
 	public ScriptTagFilter() {
@@ -69,7 +66,7 @@ public class ScriptTagFilter extends XmlEntryFilter {
 		for (int nodeIndex = 0; nodeIndex < scriptNodes.size(); nodeIndex++) {
 			Element scriptElement = (Element) scriptNodes.get(nodeIndex);
 			if (scriptElement.getValue().toLowerCase().startsWith("<jooscript>")) {
-				Elements scriptTags = parseScriptText(scriptElement.getValue().replace("--", "\\x002d\\x002d"));
+				Elements scriptTags = parseScriptText(scriptElement.getValue());
 				for (int tagIndex = 0; tagIndex < scriptTags.size(); tagIndex++) {
 					Element tagElement = scriptTags.get(tagIndex);
 					String tagName = tagElement.getLocalName();
@@ -84,16 +81,7 @@ public class ScriptTagFilter extends XmlEntryFilter {
 			} else {
 				try {
 					String script = addScriptDirectives(scriptElement);
-					if (!script.equals("")) {
-						scriptElement.getParent().insertChild(new Text("${"+SCRIPT_OUTPUT_TEMP_VARIABLE_NAME+"}"), 
-								scriptElement.getParent().indexOf(scriptElement)+1);
-						scriptElement.getParent().replaceChild(scriptElement, 
-								new Comment("[#attempt][#assign "+SCRIPT_OUTPUT_TEMP_VARIABLE_NAME+"][#noescape]"+script+"[/#noescape][/#assign]"+
-										"[#recover][#assign "+SCRIPT_OUTPUT_TEMP_VARIABLE_NAME+"='']"+script+"[/#attempt]"));
-					}
-					else {
-						scriptElement.detach();
-					}
+					scriptElement.getParent().replaceChild(scriptElement, newNode(script));
 				} catch (IOException ioException) {
 					log.error("unable to parse script: '"+scriptElement.getValue()+"'; ignoring", ioException);
 					scriptElement.detach();
@@ -121,13 +109,15 @@ public class ScriptTagFilter extends XmlEntryFilter {
 
 		private StringBuffer text = new StringBuffer();
 		private String location;
+		private Boolean isEndTag;
 
 		public ScriptPart() {
 			// no location
 		}
 
-		public ScriptPart(String location) {
+		public ScriptPart(String location, Boolean isEndTag) {
 			this.location = location;
+			this.isEndTag = isEndTag;
 		}
 
 		public void appendText(String line) {
@@ -140,6 +130,22 @@ public class ScriptTagFilter extends XmlEntryFilter {
 
 		public String getLocation() {
 			return location;
+		}
+		
+		public boolean afterEndTag(){
+			boolean afterEndTag = false;
+			if (isEndTag != null && isEndTag == Boolean.TRUE) {
+				afterEndTag = true;
+			}
+			return afterEndTag;
+		}
+		
+		public boolean isTagAttribute(){
+			boolean insideTag = false;
+			if (isEndTag != null && isEndTag == Boolean.FALSE) {
+				insideTag = true;
+			}
+			return insideTag;
 		}
 	}
 
@@ -157,20 +163,21 @@ public class ScriptTagFilter extends XmlEntryFilter {
 			if (scriptPart.getLocation() == null) {
 				scriptReplacement = scriptPart.getText();
 			} else {
-				boolean afterEndTag = false; 
-				String enclosingTagName = scriptPart.getLocation();
-				if (enclosingTagName.startsWith("/")) {
-					afterEndTag = true;
-					enclosingTagName = enclosingTagName.substring(1);
+				Element enclosingElement = findEnclosingElement(scriptElement, scriptPart.getLocation());
+				if (scriptPart.isTagAttribute()) {
+					String[] nameValue = scriptPart.getText().split("=", 2);
+					if (nameValue.length != 2) {
+						throw new DocumentTemplateException("script error: # attribute name=value not found");
+					}
+					enclosingElement.addAttribute(new Attribute(nameValue[0], enclosingElement.getNamespaceURI(), nameValue[1]));
+				} else {
+					ParentNode parent = enclosingElement.getParent();
+					int parentIndex = parent.indexOf(enclosingElement);
+					if (scriptPart.afterEndTag()) {
+						parentIndex++;
+					}
+					parent.insertChild(newNode(scriptPart.getText()), parentIndex);
 				}
-				
-				Element enclosingElement = findEnclosingElement(scriptElement, enclosingTagName);
-				ParentNode parent = enclosingElement.getParent();
-				int parentIndex = parent.indexOf(enclosingElement);
-				if (afterEndTag) {
-					parentIndex++;
-				}
-				parent.insertChild(new Comment(scriptPart.getText()), parentIndex);
 			}
 		}
 		
@@ -186,12 +193,16 @@ public class ScriptTagFilter extends XmlEntryFilter {
 			line = line.trim();
 			if (line.startsWith("@")) {
 				String location = line.substring(1);
-				scriptPart = new ScriptPart(location);
+				if (location.startsWith("/")) {
+					scriptPart = new ScriptPart(location.substring(1), Boolean.TRUE);
+				} else if (location.startsWith("#")) {
+					scriptPart = new ScriptPart(location.substring(1), Boolean.FALSE);
+				} else {
+					scriptPart = new ScriptPart(location, null);
+				}
 				scriptParts.add(scriptPart);
 			} else {
-            	scriptPart.appendText(line.replaceFirst("^\\[#--", "[#noparse]").
-            			replaceFirst("--\\]$", "[/#noparse]").
-            			replace("--", "\\x002d\\x002d"));
+            	scriptPart.appendText(line.replaceFirst("^\\[#--", "[#comment]").replaceFirst("--\\]$", "[/#comment]"));
 			}
 		}
 		return scriptParts;
