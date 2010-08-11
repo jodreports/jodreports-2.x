@@ -48,6 +48,7 @@ public abstract class AbstractDocumentTemplate implements DocumentTemplate {
 	private OpenDocumentArchive preProcessedTemplate;
 	
 	private Map openDocumentSettings = new HashMap();
+	private Map configurations = new HashMap();
 	
 	public AbstractDocumentTemplate() {
 		this(DEFAULT_FREEMARKER_CONFIGURATION);
@@ -78,7 +79,7 @@ public abstract class AbstractDocumentTemplate implements DocumentTemplate {
     	}
     	OpenDocumentArchive outputArchive = preProcessedTemplate.createCopy();
     	TemplateAndModelMerger templateAndModelMerger = new TemplateAndModelMerger(freemarkerConfiguration, xmlEntries, 
-    			openDocumentSettings);
+    			openDocumentSettings, configurations);
     	templateAndModelMerger.process(outputArchive, model);
     	
     	OpenDocumentIO.writeZip(outputArchive, output);
@@ -86,7 +87,12 @@ public abstract class AbstractDocumentTemplate implements DocumentTemplate {
 
     private void preProcess() throws IOException, DocumentTemplateException {
     	preProcessedTemplate = getOpenDocumentArchive();
-    	TemplatePreProcessor templatePreProcessor = new TemplatePreProcessor(xmlEntries, contentWrapper);
+    	TemplatePreProcessor templatePreProcessor = new TemplatePreProcessor(xmlEntries, contentWrapper, configurations);
     	templatePreProcessor.process(preProcessedTemplate);
     }
+
+	public Map getConfigurations() {
+		return configurations;
+	}
+
 }

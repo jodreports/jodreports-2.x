@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Map;
 
 import net.sf.jooreports.opendocument.OpenDocumentArchive;
 import net.sf.jooreports.templates.DocumentTemplate.ContentWrapper;
@@ -39,14 +40,16 @@ class TemplatePreProcessor {
 
 	private String[] xmlEntries;
 	private ContentWrapper contentWrapper;
+	private final Map configurations;
 
 	private final TextInputTagFilter textInputTagFilter = new TextInputTagFilter();
 	private final ScriptTagFilter scriptTagFilter = new ScriptTagFilter();
 	private final DynamicImageFilter dynamicImageFilter = new DynamicImageFilter();
 	
-	public TemplatePreProcessor(String[] xmlEntries, ContentWrapper contentWrapper) {
+	public TemplatePreProcessor(String[] xmlEntries, ContentWrapper contentWrapper, Map configurations) {
 		this.xmlEntries = xmlEntries;
 		this.contentWrapper = contentWrapper;
+		this.configurations = configurations;
 	}
 
 	public void process(OpenDocumentArchive archive) throws DocumentTemplateException, IOException {
@@ -82,7 +85,12 @@ class TemplatePreProcessor {
 		} catch (ParsingException parsingException) {
 			throw new DocumentTemplateException(parsingException);
 		}
-
+		
+		Boolean setting = Configuration.getConfiguration(Configuration.SETTING_PROCESS_JOOSCRIPT_ONLY, configurations);
+		if(setting!=null){
+			textInputTagFilter.setProcessJooScriptOnly(setting.booleanValue());
+		}
+		
 		textInputTagFilter.doFilter(document);
 		scriptTagFilter.doFilter(document);
 		dynamicImageFilter.doFilter(document);

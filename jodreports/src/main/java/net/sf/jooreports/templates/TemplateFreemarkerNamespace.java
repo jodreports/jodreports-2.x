@@ -22,10 +22,15 @@ public class TemplateFreemarkerNamespace {
 
 	public static final String NAME = "jooscript";
 	private static final Log log = LogFactory.getLog(TemplateFreemarkerNamespace.class);
+	private final Map configurations;
 
 	private int imageIndex = 0;
 	
 	private Map/*<ImageWriter,String>*/ images = new HashMap();
+
+	public TemplateFreemarkerNamespace(Map configurations) {
+		this.configurations = configurations;
+	}
 
 	public String getDoubleHyphen() {
 		return "--";
@@ -51,7 +56,7 @@ public class TemplateFreemarkerNamespace {
 	}
 
 	public String image(String defaultImageName, String fileName){
-		if (new File(fileName).exists()) {
+		if (new File(fileName).exists() || !isCheckImageExist()) {
 			defaultImageName = image(new FileImageSource(fileName));
 		}
 		return defaultImageName;
@@ -78,7 +83,7 @@ public class TemplateFreemarkerNamespace {
 
 	public String imageWidth(String defaultImageName, String fileName, String maxWidth, String maxHeight, String format){
 		String result = maxWidth;
-		if (new File(fileName).exists()) {
+		if (new File(fileName).exists() || !isCheckImageExist()) {
 			result = imageWidth(new FileImageSource(fileName), maxWidth, maxHeight, format);
 		}
 		return result;
@@ -106,7 +111,7 @@ public class TemplateFreemarkerNamespace {
 
 	public String imageHeight(String defaultImageName, String fileName, String maxWidth, String maxHeight, String format){
 		String result = maxHeight;
-		if (new File(fileName).exists()) {
+		if (new File(fileName).exists() || !isCheckImageExist()) {
 			result = imageHeight(new FileImageSource(fileName), maxWidth, maxHeight, format);
 		}
 		return result;
@@ -145,4 +150,14 @@ public class TemplateFreemarkerNamespace {
 		}
 		return result;
 	}
+	
+	private boolean isCheckImageExist() {
+		boolean checkImageExist = true;
+		Boolean setting = Configuration.getConfiguration(Configuration.SETTING_CHECK_IMAGE_EXIST, configurations);
+		if(setting!=null){
+			checkImageExist = setting.booleanValue();
+		}
+		return checkImageExist;
+	}
+
 }

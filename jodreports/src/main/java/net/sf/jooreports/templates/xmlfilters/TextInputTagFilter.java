@@ -31,6 +31,8 @@ import nu.xom.Text;
  */
 public class TextInputTagFilter extends XmlEntryFilter {
 
+	private boolean processJooScriptOnly = true;
+
 	public void doFilter(Document document) {
 		Nodes textInputNodes = document.query("//text:text-input", XPATH_CONTEXT);
 		for (int nodeIndex = 0; nodeIndex < textInputNodes.size(); nodeIndex++) {
@@ -48,13 +50,17 @@ public class TextInputTagFilter extends XmlEntryFilter {
 					}
 					childNode.getParent().replaceChild(childNode, newNode(value));
 				}
-			} else {
+			} else if (!processJooScriptOnly) {
 				if (expression.length()>0 && !expression.startsWith("${")) {
 					expression = "${" + expression + "}";
 				}
 				textInputElement.getParent().replaceChild(textInputElement, new Text(expression));
 			}
 		}
+	}
+
+	public void setProcessJooScriptOnly(boolean processJooScriptOnly) {
+		this.processJooScriptOnly = processJooScriptOnly;
 	}
 
 }

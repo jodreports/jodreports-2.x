@@ -46,16 +46,18 @@ class TemplateAndModelMerger {
 	private final Configuration freemarkerConfiguration;
 	private final String[] xmlEntries;
 	private final Map openDocumentSettings;
+	private final Map configurations;
 
 	public TemplateAndModelMerger(Configuration freemarkerConfiguration, String[] xmlEntries, 
-			Map openDocumentSettings) {
+			Map openDocumentSettings, Map configurations) {
 		this.freemarkerConfiguration = freemarkerConfiguration;
 		this.xmlEntries = xmlEntries;
 		this.openDocumentSettings = openDocumentSettings;
+		this.configurations = configurations;
 	}
 
 	public void process(OpenDocumentArchive archive, Object model) throws IOException, DocumentTemplateException {
-		TemplateFreemarkerNamespace predefinedNamespace = new TemplateFreemarkerNamespace();
+		TemplateFreemarkerNamespace predefinedNamespace = new TemplateFreemarkerNamespace(configurations);
 		
 		for (Iterator it = archive.getEntryNames().iterator(); it.hasNext();) {
 			String entryName = (String) it.next();
