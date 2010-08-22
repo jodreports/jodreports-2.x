@@ -6,7 +6,7 @@
   <artifactId>jodreports</artifactId>
   <packaging>jar</packaging>
   <name>JODReports</name>
-  <version>2.3.0</version>
+  <version>2.3.1-SNAPSHOT</version>
   <description>
     JODReports generates dynamic documents and reports based on the
     OpenDocument Format and FreeMarker.
@@ -21,7 +21,7 @@
   <scm>
     <url>http://jodreports.svn.sourceforge.net</url>
     <connection>
-    	scm:svn:https://jodreports.svn.sourceforge.net/svnroot/jodreports/tags/2.3.0/jodreports
+    	scm:svn:https://jodreports.svn.sourceforge.net/svnroot/jodreports/trunk/jodreports
     </connection>
   </scm>
   <developers>
