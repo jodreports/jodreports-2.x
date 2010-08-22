@@ -1,3 +1,20 @@
+2.3.0
+---
+
+ * implement configuration feature
+	Introduce two configurable settings:
+	process_jooscript_only
+	check_image_exist
+	(both setting default to Boolean.TRUE)
+
+ * support changing tag attribute in JOOScript 
+	Syntax:	@#location
+			attributeName=value
+
+ * support script replacement in preceding elements when node is not exist in ancestor elements 
+
+ * optimize the code for solving XML escaping and script output in JOOScript. 
+
 2.2.2
 ---
 
