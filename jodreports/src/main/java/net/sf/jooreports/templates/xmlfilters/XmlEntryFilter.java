@@ -34,6 +34,7 @@ public abstract class XmlEntryFilter {
 	protected static final String SCRIPT_NAMESPACE =  "urn:oasis:names:tc:opendocument:xmlns:script:1.0";
 	protected static final String TABLE_NAMESPACE = "urn:oasis:names:tc:opendocument:xmlns:table:1.0";
 	protected static final String TEXT_NAMESPACE = "urn:oasis:names:tc:opendocument:xmlns:text:1.0";
+	protected static final String STYLE_NAMESPACE = "urn:oasis:names:tc:opendocument:xmlns:style:1.0";
 	protected static final String XLINK_NAMESPACE = "http://www.w3.org/1999/xlink";
 	
 	protected static final XPathContext XPATH_CONTEXT = new XPathContext();
@@ -42,6 +43,7 @@ public abstract class XmlEntryFilter {
 		XPATH_CONTEXT.addNamespace("script", SCRIPT_NAMESPACE);
 		XPATH_CONTEXT.addNamespace("table", TABLE_NAMESPACE);
 		XPATH_CONTEXT.addNamespace("text", TEXT_NAMESPACE);
+		XPATH_CONTEXT.addNamespace("style", STYLE_NAMESPACE);
 		XPATH_CONTEXT.addNamespace("xlink", XLINK_NAMESPACE);
 	}
 

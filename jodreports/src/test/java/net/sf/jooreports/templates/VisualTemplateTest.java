@@ -200,4 +200,39 @@ public class VisualTemplateTest extends AbstractTemplateTest {
 			"cell 3b";
         assertEquals(expected, actual);
     }
+    
+	/**
+	 * template contains jooscript for inserting script in preceding element </tt>
+	 */
+    public void testScriptForTableDynamicColumn() throws IOException, DocumentTemplateException {
+        File templateFile = getTestFile("visual-table-dynamic-column-template.odt");
+        Map model = new HashMap();
+
+        List headers = new ArrayList();
+        model.put("headers", headers);
+        headers.add("header1");
+        headers.add("header2");
+        headers.add("header3");
+        
+        List items = new ArrayList();
+        model.put("items", items);
+        List item = new ArrayList();
+        item.add("a1");
+        item.add("a2");
+        item.add("a3");
+        items.add(item);
+        item = new ArrayList();
+        item.add("b1");
+        item.add("b2");
+        item.add("b3");
+        items.add(item);
+
+        String actual = processTemplate(templateFile, model);
+        String expected =
+        	"header1\nheader2\nheader3\n"+
+        	"a1\na2\na3\n"+
+			"b1\nb2\nb3";
+        assertEquals(expected, actual);
+    }
+
 }

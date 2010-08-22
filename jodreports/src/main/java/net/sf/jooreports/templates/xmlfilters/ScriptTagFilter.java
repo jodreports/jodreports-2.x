@@ -211,7 +211,10 @@ public class ScriptTagFilter extends XmlEntryFilter {
 	private static Element findEnclosingElement(Element element, String enclosingTagName) throws DocumentTemplateException {
 		Nodes ancestors = element.query("ancestor::" + enclosingTagName, XPATH_CONTEXT);
 		if (ancestors.size() == 0) {
-			throw new DocumentTemplateException("script error: no such enclosing tag named '" + enclosingTagName +"'");
+			ancestors = element.query("preceding::" + enclosingTagName, XPATH_CONTEXT);
+			if (ancestors.size() == 0) {
+				throw new DocumentTemplateException("script error: no such enclosing tag named '" + enclosingTagName +"'");
+			}
 		}
 		return (Element) ancestors.get(ancestors.size() - 1);
 	}
