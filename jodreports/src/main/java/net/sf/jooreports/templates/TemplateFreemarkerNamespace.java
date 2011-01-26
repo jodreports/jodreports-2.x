@@ -5,8 +5,8 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import net.sf.jooreports.templates.image.FileImageSource;
@@ -21,7 +21,7 @@ import net.sf.jooreports.templates.image.ImageSource;
 public class TemplateFreemarkerNamespace {
 
 	public static final String NAME = "jooscript";
-	private static final Log log = LogFactory.getLog(TemplateFreemarkerNamespace.class);
+	private static final Logger log = LoggerFactory.getLogger(TemplateFreemarkerNamespace.class);
 	private final Map configurations;
 
 	private int imageIndex = 0;

@@ -1,3 +1,11 @@
+2.4.0
+---
+Improvement
+  * Replaced commons-logging with slf4j
+  * Split CLI into separate module
+  * Support more attribute NamespaceURI in tag attribute replacement.
+	(Available Namespaces: draw, script, table, text, style, xlink)
+
 2.3.0
 ---
 

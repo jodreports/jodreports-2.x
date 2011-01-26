@@ -1,4 +1,4 @@
-This is JODReports version 2.4.0, released on 2011-01-26
+This is JODReports sample webapp version 2.4.0, released on 2011-01-26
 
 Please see
 
@@ -8,13 +8,6 @@ for the latest and up to date documentation.
 
 Requirements
 ============
-
-JODReports requires Java 1.4 or later (although with minor modifications
-it can be made to work with 1.3 as well).
-
-To create documents in formats other than OpenDocument Text (odt) 
-please use JODConverter library
-See http://www.artofsolving.com/opensource/jodconverter for more info.
 
 To run the webapp a servlet 2.3 container such as Apache Tomcat 4.1
 or later is also required.
@@ -32,7 +25,7 @@ your changes back, so JODReports can be improved.
 (You are free to modify the sample webapp as a starting point for your
 own webapp without restrictions.)
 
-JODReports includes the following third-party libraries so you must
+JODReports sample webapp includes the following third-party libraries so you must
 agree to their respective licenses as well
 
  * FreeMarker - http://www.freemarker.org
@@ -46,6 +39,12 @@ agree to their respective licenses as well
 
  * slf4j - http://slf4j.org
    MIT License
+ 
+ * Spring Framework - http://www.springframework.org
+   Apache License 2.0
+
+ * JFreeChart - http://www.jfree.org/jfreechart/
+   optional (used by report sample) - GNU LGPL
 
 In compliance to some of the above licenses I also need to state here
 that JODReports includes software developed by

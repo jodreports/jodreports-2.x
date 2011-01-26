@@ -36,8 +36,8 @@ import nu.xom.Elements;
 import nu.xom.Nodes;
 import nu.xom.ParentNode;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * OpenDocument XML entry filter that replaces <tt>script</tt> elements with FreeMarker directives.
@@ -49,7 +49,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class ScriptTagFilter extends XmlEntryFilter {
 
-	private static final Log log = LogFactory.getLog(ScriptTagFilter.class);
+	private static final Logger log = LoggerFactory.getLogger(ScriptTagFilter.class);
 	
 	private final Map/*<String,JooScriptTag>*/ tags;
 	

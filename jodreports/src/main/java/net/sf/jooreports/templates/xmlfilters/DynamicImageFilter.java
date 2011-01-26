@@ -7,8 +7,8 @@ import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Nodes;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Processes content.xml for dynamic images<p>
@@ -31,7 +31,7 @@ public class DynamicImageFilter extends XmlEntryFilter {
 	private static final String IMAGE_WIDTH_PREFIX	= TemplateFreemarkerNamespace.NAME + ".imageWidth(";
 	private static final String IMAGE_HEIGHT_PREFIX = TemplateFreemarkerNamespace.NAME + ".imageHeight(";
 
-	private static final Log log = LogFactory.getLog(DynamicImageFilter.class);
+	private static final Logger log = LoggerFactory.getLogger(DynamicImageFilter.class);
 
 	public void doFilter(Document document) {
 		Nodes nodes = document.query("//draw:image", OpenDocumentNamespaces.XPATH_CONTEXT);
