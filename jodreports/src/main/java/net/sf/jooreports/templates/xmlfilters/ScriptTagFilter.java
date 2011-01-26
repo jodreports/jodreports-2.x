@@ -169,7 +169,19 @@ public class ScriptTagFilter extends XmlEntryFilter {
 					if (nameValue.length != 2) {
 						throw new DocumentTemplateException("script error: # attribute name=value not found");
 					}
-					enclosingElement.addAttribute(new Attribute(nameValue[0], enclosingElement.getNamespaceURI(), nameValue[1]));
+					
+					String attributeNamespace = enclosingElement.getNamespaceURI();
+					if (nameValue[0].contains(":")) {
+						String prefix = nameValue[0].split(":")[0];
+						if (!prefix.equals(enclosingElement.getNamespacePrefix())) {
+							attributeNamespace = XPATH_CONTEXT.lookup(prefix);
+							if (attributeNamespace==null) {
+								throw new DocumentTemplateException("unsupported attribute namespace: " + prefix);
+							}
+						}
+					}
+					
+					enclosingElement.addAttribute(new Attribute(nameValue[0], attributeNamespace, nameValue[1]));
 				} else {
 					ParentNode parent = enclosingElement.getParent();
 					int parentIndex = parent.indexOf(enclosingElement);
