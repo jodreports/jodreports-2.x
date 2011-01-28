@@ -54,7 +54,7 @@ public class OpenDocumentArchive {
 	 * Returns an {@link OutputStream} for writing the content of the given entry
 	 * 
 	 * @param entryName
-	 * @return
+	 * @return an {@link OutputStream}
 	 */
 	public OutputStream getEntryOutputStream(String entryName) {
 		return new EntryByteArrayOutputStream(entryName);
@@ -64,7 +64,7 @@ public class OpenDocumentArchive {
 	 * Returns a {@link Writer} for writing the content of the given entry
 	 * 
 	 * @param entryName
-	 * @return
+	 * @return a {@link Writer}
 	 */
 	public Writer getEntryWriter(String entryName) {
 		return OpenDocumentIO.toUtf8Writer(getEntryOutputStream(entryName));
