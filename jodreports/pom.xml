@@ -17,8 +17,8 @@
     </license>
   </licenses>
   <scm>
-    <url>http://jodreports.svn.sourceforge.net/tags/2.4.0/jodreports</url>
-    <connection>scm:svn:https://jodreports.svn.sourceforge.net/svnroot/jodreports/tags/2.4.0/jodreports</connection>
+    <url>http://jodreports.svn.sourceforge.net</url>
+    <connection>scm:svn:https://jodreports.svn.sourceforge.net/svnroot/jodreports/trunk/jodreports</connection>
   </scm>
   <developers>
     <developer>
