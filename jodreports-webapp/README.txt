@@ -1,4 +1,4 @@
-This is JODReports sample webapp version 2.4.0, released on 2011-01-26
+This is JODReports sample webapp version 2.4.0, released on 2011-01-28
 
 Please see
 
