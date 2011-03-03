@@ -12,6 +12,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import net.sf.jooreports.opendocument.OpenDocumentArchive;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -36,7 +38,7 @@ public class TextExtractor extends DefaultHandler {
 
 	public static String extractTextAsString(File openDocumentFile) throws IOException, SAXException {
 		ZipFile zipFile = new ZipFile(openDocumentFile);
-		ZipEntry contentEntry = zipFile.getEntry("content.xml");
+		ZipEntry contentEntry = zipFile.getEntry(OpenDocumentArchive.ENTRY_CONTENT);
 		InputStream inputStream = zipFile.getInputStream(contentEntry);
 		StringWriter stringWriter = new StringWriter();
 		extractText(inputStream, stringWriter);

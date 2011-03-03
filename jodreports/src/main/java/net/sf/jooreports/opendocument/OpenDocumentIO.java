@@ -78,11 +78,11 @@ public class OpenDocumentIO {
 		Set entryNames = archive.getEntryNames();
 		
 		// OpenDocument spec requires 'mimetype' to be the first entry
-		writeZipEntry(zipOutputStream, archive, "mimetype", ZipEntry.STORED);
+		writeZipEntry(zipOutputStream, archive, OpenDocumentArchive.ENTRY_MIMETYPE, ZipEntry.STORED);
 		
 		for (Iterator it = entryNames.iterator(); it.hasNext();) {
 			String entryName = (String) it.next();
-			if (!"mimetype".equals(entryName)) {
+			if (!entryName.equals(OpenDocumentArchive.ENTRY_MIMETYPE)) {
 				writeZipEntry(zipOutputStream, archive, entryName, ZipEntry.DEFLATED);
 			}
 		}

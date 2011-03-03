@@ -16,6 +16,8 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 
 public class OpenDocumentArchive {
 	
+	public static final String ENTRY_MIMETYPE = "mimetype";
+	public static final String ENTRY_STYLES = "styles.xml";
 	public static final String ENTRY_CONTENT = "content.xml";
 	public static final String ENTRY_MANIFEST = "META-INF/manifest.xml";
 	public static final String ENTRY_SETTINGS = "settings.xml";

@@ -27,7 +27,7 @@ public class OpenDocumentIOTest extends TestCase {
 		Set entryNames = archive.getEntryNames();
 		assertFalse("no entries", entryNames.isEmpty());
 		
-		String mimetypeString = IOUtils.toString(archive.getEntryReader("mimetype"));
+		String mimetypeString = IOUtils.toString(archive.getEntryReader(OpenDocumentArchive.ENTRY_MIMETYPE));
 		assertEquals("application/vnd.oasis.opendocument.text", mimetypeString);
 	}
 
@@ -39,7 +39,7 @@ public class OpenDocumentIOTest extends TestCase {
 		Set entryNames = documentData.getEntryNames();
 		assertFalse("no entries", entryNames.isEmpty());
 
-		String mimetypeString = IOUtils.toString(documentData.getEntryReader("mimetype"));
+		String mimetypeString = IOUtils.toString(documentData.getEntryReader(OpenDocumentArchive.ENTRY_MIMETYPE));
 		assertEquals("application/vnd.oasis.opendocument.text", mimetypeString);
 	}
 
@@ -56,11 +56,11 @@ public class OpenDocumentIOTest extends TestCase {
 	public void testWriteZip() throws IOException {
 		OpenDocumentArchive archive = new OpenDocumentArchive();
 		
-		Writer mimetypeWriter = archive.getEntryWriter("mimetype");
+		Writer mimetypeWriter = archive.getEntryWriter(OpenDocumentArchive.ENTRY_MIMETYPE);
 		mimetypeWriter.write("application/x-test");
 		mimetypeWriter.close();
 		
-		Writer contentWriter = archive.getEntryWriter("content.xml");
+		Writer contentWriter = archive.getEntryWriter(OpenDocumentArchive.ENTRY_CONTENT);
 		contentWriter.write("test content");
 		contentWriter.close();
 		
@@ -71,7 +71,7 @@ public class OpenDocumentIOTest extends TestCase {
 		ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(documentFile));
 		ZipEntry firstEntry = zipInputStream.getNextEntry();
 		assertNotNull("zip file has no entries", firstEntry);
-		assertEquals("first entry not 'mimetype' as required by OpenDocument", "mimetype", firstEntry.getName());
+		assertEquals("first entry not 'mimetype' as required by OpenDocument", OpenDocumentArchive.ENTRY_MIMETYPE, firstEntry.getName());
 		assertEquals("first entry compressed", ZipEntry.STORED, firstEntry.getMethod());
 
 		// Added by NetForce1 to verify crc-correctness
