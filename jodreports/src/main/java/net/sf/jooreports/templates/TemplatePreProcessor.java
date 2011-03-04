@@ -86,10 +86,8 @@ class TemplatePreProcessor {
 			throw new DocumentTemplateException(parsingException);
 		}
 		
-		Boolean setting = Configuration.getConfiguration(Configuration.SETTING_PROCESS_JOOSCRIPT_ONLY, configurations);
-		if(setting!=null){
-			textInputTagFilter.setProcessJooScriptOnly(setting.booleanValue());
-		}
+		textInputTagFilter.setProcessJooScriptOnly(Configuration.getConfiguration(
+				Configuration.SETTING_PROCESS_JOOSCRIPT_ONLY, configurations));
 		
 		textInputTagFilter.doFilter(document);
 		scriptTagFilter.doFilter(document);

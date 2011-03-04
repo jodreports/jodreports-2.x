@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -260,5 +261,16 @@ public class DynamicImagesTest extends AbstractTemplateTest {
 			"[frame:1.9cm,2.54cm][img:Pictures/dynamic-image-4.png]";			
         
         assertEquals("output content", expected, actual);
+	}
+
+	public void testImageResizeInLocaleWithCommaAsDecimalSeparator()
+			throws Exception {
+		Locale locale = Locale.getDefault();
+		try {
+			Locale.setDefault(Locale.GERMANY);
+			testImageResize();
+		} finally {
+			Locale.setDefault(locale);
+		}
 	}
 }

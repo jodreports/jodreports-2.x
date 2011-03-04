@@ -2,7 +2,9 @@ package net.sf.jooreports.templates;
 
 import java.io.File;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -22,6 +24,7 @@ public class TemplateFreemarkerNamespace {
 
 	public static final String NAME = "jooscript";
 	private static final Logger log = LoggerFactory.getLogger(TemplateFreemarkerNamespace.class);
+	private static final DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance(Locale.US);
 	private final Map configurations;
 
 	private int imageIndex = 0;
@@ -30,6 +33,7 @@ public class TemplateFreemarkerNamespace {
 
 	public TemplateFreemarkerNamespace(Map configurations) {
 		this.configurations = configurations;
+		decimalFormat.applyPattern("#.##");
 	}
 
 	public String getDoubleHyphen() {
@@ -56,7 +60,7 @@ public class TemplateFreemarkerNamespace {
 	}
 
 	public String image(String defaultImageName, String fileName){
-		if (new File(fileName).exists() || !isCheckImageExist()) {
+		if (imageExists(fileName)) {
 			defaultImageName = image(new FileImageSource(fileName));
 		}
 		return defaultImageName;
@@ -83,7 +87,7 @@ public class TemplateFreemarkerNamespace {
 
 	public String imageWidth(String defaultImageName, String fileName, String maxWidth, String maxHeight, String format){
 		String result = maxWidth;
-		if (new File(fileName).exists() || !isCheckImageExist()) {
+		if (imageExists(fileName)) {
 			result = imageWidth(new FileImageSource(fileName), maxWidth, maxHeight, format);
 		}
 		return result;
@@ -111,7 +115,7 @@ public class TemplateFreemarkerNamespace {
 
 	public String imageHeight(String defaultImageName, String fileName, String maxWidth, String maxHeight, String format){
 		String result = maxHeight;
-		if (new File(fileName).exists() || !isCheckImageExist()) {
+		if (imageExists(fileName)) {
 			result = imageHeight(new FileImageSource(fileName), maxWidth, maxHeight, format);
 		}
 		return result;
@@ -134,13 +138,13 @@ public class TemplateFreemarkerNamespace {
 		if (dimX>0 && dimY>0 && maxDimXStr.length()>2 && maxDimYStr.length()>2) {
 			String unit = maxDimXStr.substring(maxDimXStr.length()-2);
 			try {
-				double maxDimX=Double.parseDouble(maxDimXStr.substring(0, maxDimXStr.length()-2));
-				double maxDimY=Double.parseDouble(maxDimYStr.substring(0, maxDimYStr.length()-2));
+				double maxDimX = Double.parseDouble(maxDimXStr.substring(0, maxDimXStr.length()-2));
+				double maxDimY = Double.parseDouble(maxDimYStr.substring(0, maxDimYStr.length()-2));
 				double maxRatio = (double) maxDimX / maxDimY;
 				double ratio = (double) dimX / dimY;
-				if (ratio!=0 && (format.equalsIgnoreCase("Max"+(isWidth?"Height":"Width"))) 
+				if (ratio!=0 && (format.equalsIgnoreCase("Max" + (isWidth?"Height":"Width"))) 
 						|| (format.equalsIgnoreCase("fit") && ratio<maxRatio)) {
-					result = new DecimalFormat("#.##").format(maxDimY * ratio) + unit;
+					result = decimalFormat.format(maxDimY * ratio) + unit;
 				}
 			} catch (NumberFormatException nfException) {
 				log.error("Cannot get image dimension", nfException);
@@ -151,13 +155,12 @@ public class TemplateFreemarkerNamespace {
 		return result;
 	}
 	
-	private boolean isCheckImageExist() {
-		boolean checkImageExist = true;
-		Boolean setting = Configuration.getConfiguration(Configuration.SETTING_CHECK_IMAGE_EXIST, configurations);
-		if(setting!=null){
-			checkImageExist = setting.booleanValue();
+	private boolean imageExists(String fileName) {
+		boolean isFileExist = true;
+		if(Configuration.getConfiguration(Configuration.SETTING_CHECK_IMAGE_EXIST, configurations)){
+			isFileExist = new File(fileName).exists();
 		}
-		return checkImageExist;
+		return isFileExist;
 	}
 
 }
