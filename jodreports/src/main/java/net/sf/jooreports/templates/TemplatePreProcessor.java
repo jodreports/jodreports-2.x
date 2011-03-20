@@ -24,9 +24,7 @@ import java.util.Map;
 
 import net.sf.jooreports.opendocument.OpenDocumentArchive;
 import net.sf.jooreports.templates.DocumentTemplate.ContentWrapper;
-import net.sf.jooreports.templates.xmlfilters.DynamicImageFilter;
-import net.sf.jooreports.templates.xmlfilters.ScriptTagFilter;
-import net.sf.jooreports.templates.xmlfilters.TextInputTagFilter;
+import net.sf.jooreports.templates.xmlfilters.XmlEntryFilter;
 import nu.xom.Builder;
 import nu.xom.Document;
 import nu.xom.ParsingException;
@@ -39,15 +37,13 @@ class TemplatePreProcessor {
 	private static final String UTF_8 = "UTF-8";
 
 	private String[] xmlEntries;
+	private XmlEntryFilter[] xmlEntryFilters;
 	private ContentWrapper contentWrapper;
 	private final Map configurations;
-
-	private final TextInputTagFilter textInputTagFilter = new TextInputTagFilter();
-	private final ScriptTagFilter scriptTagFilter = new ScriptTagFilter();
-	private final DynamicImageFilter dynamicImageFilter = new DynamicImageFilter();
 	
-	public TemplatePreProcessor(String[] xmlEntries, ContentWrapper contentWrapper, Map configurations) {
+	public TemplatePreProcessor(String[] xmlEntries, XmlEntryFilter[] xmlEntryFilters, ContentWrapper contentWrapper, Map configurations) {
 		this.xmlEntries = xmlEntries;
+		this.xmlEntryFilters = xmlEntryFilters;
 		this.contentWrapper = contentWrapper;
 		this.configurations = configurations;
 	}
@@ -86,12 +82,10 @@ class TemplatePreProcessor {
 			throw new DocumentTemplateException(parsingException);
 		}
 		
-		textInputTagFilter.setProcessJooScriptOnly(Configuration.getConfiguration(
-				Configuration.SETTING_PROCESS_JOOSCRIPT_ONLY, configurations));
-		
-		textInputTagFilter.doFilter(document);
-		scriptTagFilter.doFilter(document);
-		dynamicImageFilter.doFilter(document);
+		for (int i = 0; i < xmlEntryFilters.length; i++) {
+			xmlEntryFilters[i].applyConfigurations(configurations);
+			xmlEntryFilters[i].doFilter(document);
+		}
 		
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 		

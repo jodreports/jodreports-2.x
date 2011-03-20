@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
 
+import net.sf.jooreports.templates.xmlfilters.XmlEntryFilter;
+
 public interface DocumentTemplate {
 
 	public interface ContentWrapper {
@@ -46,6 +48,16 @@ public interface DocumentTemplate {
 	 */
 	public void setXmlEntries(String[] xmlEntries);
 
+	/**
+	 * Set a custom list of filters that will be used to pre-process the template.
+	 * <p>
+	 * The default filters are (in that order) <i>TextInputTagFilter</i>,
+	 * <i>ScriptTagFilter</i>,<i>DynamicImageFilter</i>.
+	 * 
+	 * @param xmlEntryFilters
+	 */
+	public void setXmlEntryFilters(XmlEntryFilter[] xmlEntryFilters);
+	
 	/**
 	 * Hook to set custom FreeMarker directives on each XML entry.
 	 * <p>

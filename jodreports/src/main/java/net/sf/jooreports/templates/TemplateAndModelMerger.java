@@ -57,7 +57,8 @@ class TemplateAndModelMerger {
 	}
 
 	public void process(OpenDocumentArchive archive, Object model) throws IOException, DocumentTemplateException {
-		TemplateFreemarkerNamespace predefinedNamespace = new TemplateFreemarkerNamespace(configurations);
+		TemplateFreemarkerNamespace predefinedNamespace = new TemplateFreemarkerNamespace();
+		predefinedNamespace.applyConfigurations(configurations);
 		
 		for (Iterator it = archive.getEntryNames().iterator(); it.hasNext();) {
 			String entryName = (String) it.next();

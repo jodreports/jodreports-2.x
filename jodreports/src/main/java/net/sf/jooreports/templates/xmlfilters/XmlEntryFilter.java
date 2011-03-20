@@ -15,6 +15,8 @@
 //
 package net.sf.jooreports.templates.xmlfilters;
 
+import java.util.Map;
+
 import net.sf.jooreports.templates.DocumentTemplateException;
 import net.sf.jooreports.templates.TemplateFreemarkerNamespace;
 import nu.xom.Comment;
@@ -45,6 +47,10 @@ public abstract class XmlEntryFilter {
 		XPATH_CONTEXT.addNamespace("text", TEXT_NAMESPACE);
 		XPATH_CONTEXT.addNamespace("style", STYLE_NAMESPACE);
 		XPATH_CONTEXT.addNamespace("xlink", XLINK_NAMESPACE);
+	}
+
+	public void applyConfigurations(Map configurations) {
+		/* Default implementation does not use any configuration */
 	}
 
 	public abstract void doFilter(Document document) throws DocumentTemplateException;

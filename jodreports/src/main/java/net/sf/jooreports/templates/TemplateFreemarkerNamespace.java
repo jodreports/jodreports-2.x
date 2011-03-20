@@ -25,14 +25,13 @@ public class TemplateFreemarkerNamespace {
 	public static final String NAME = "jooscript";
 	private static final Logger log = LoggerFactory.getLogger(TemplateFreemarkerNamespace.class);
 	private static final DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance(Locale.US);
-	private final Map configurations;
+	private boolean checkImageExistRequired = true;
 
 	private int imageIndex = 0;
 	
 	private Map/*<ImageWriter,String>*/ images = new HashMap();
 
-	public TemplateFreemarkerNamespace(Map configurations) {
-		this.configurations = configurations;
+	public TemplateFreemarkerNamespace() {
 		decimalFormat.applyPattern("#.##");
 	}
 
@@ -40,6 +39,11 @@ public class TemplateFreemarkerNamespace {
 		return "--";
 	}
 
+	public void applyConfigurations(Map configurations) {
+		this.checkImageExistRequired = Configuration.getConfiguration(
+				Configuration.SETTING_CHECK_IMAGE_EXIST, configurations);
+	}
+	
 	public String image(ImageSource imageWriter) {
 		if (images.containsKey(imageWriter)) {
 			return (String) images.get(imageWriter);
@@ -157,7 +161,7 @@ public class TemplateFreemarkerNamespace {
 	
 	private boolean imageExists(String fileName) {
 		boolean isFileExist = true;
-		if(Configuration.getConfiguration(Configuration.SETTING_CHECK_IMAGE_EXIST, configurations)){
+		if(checkImageExistRequired){
 			isFileExist = new File(fileName).exists();
 		}
 		return isFileExist;

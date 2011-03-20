@@ -23,6 +23,10 @@ import java.util.Map;
 
 import net.sf.jooreports.opendocument.OpenDocumentArchive;
 import net.sf.jooreports.opendocument.OpenDocumentIO;
+import net.sf.jooreports.templates.xmlfilters.DynamicImageFilter;
+import net.sf.jooreports.templates.xmlfilters.ScriptTagFilter;
+import net.sf.jooreports.templates.xmlfilters.TextInputTagFilter;
+import net.sf.jooreports.templates.xmlfilters.XmlEntryFilter;
 import freemarker.template.Configuration;
 
 public abstract class AbstractDocumentTemplate implements DocumentTemplate {
@@ -38,9 +42,16 @@ public abstract class AbstractDocumentTemplate implements DocumentTemplate {
 		}
 
 	};
+
+	private static final XmlEntryFilter[] DEFAULT_XML_ENTRY_FILTERS = new XmlEntryFilter[] {
+		new TextInputTagFilter(),
+		new ScriptTagFilter(),
+		new DynamicImageFilter()
+	};
 	
 	private final Configuration freemarkerConfiguration;
 	private ContentWrapper contentWrapper = DEFAULT_CONTENT_WRAPPER;
+	private XmlEntryFilter[] xmlEntryFilters = DEFAULT_XML_ENTRY_FILTERS;
 	private String[] xmlEntries = new String[] {
 		OpenDocumentArchive.ENTRY_CONTENT,
 		OpenDocumentArchive.ENTRY_STYLES
@@ -63,6 +74,10 @@ public abstract class AbstractDocumentTemplate implements DocumentTemplate {
 		Arrays.sort(this.xmlEntries);
 	}
 
+	public void setXmlEntryFilters(XmlEntryFilter[] xmlEntryFilters) {
+		this.xmlEntryFilters = xmlEntryFilters;
+	}
+	
 	public void setContentWrapper(ContentWrapper contentWrapper) {
 		this.contentWrapper = contentWrapper;
 	}
@@ -87,7 +102,7 @@ public abstract class AbstractDocumentTemplate implements DocumentTemplate {
 
     private void preProcess() throws IOException, DocumentTemplateException {
     	preProcessedTemplate = getOpenDocumentArchive();
-    	TemplatePreProcessor templatePreProcessor = new TemplatePreProcessor(xmlEntries, contentWrapper, configurations);
+    	TemplatePreProcessor templatePreProcessor = new TemplatePreProcessor(xmlEntries, xmlEntryFilters, contentWrapper, configurations);
     	templatePreProcessor.process(preProcessedTemplate);
     }
 

@@ -15,6 +15,9 @@
 //
 package net.sf.jooreports.templates.xmlfilters;
 
+import java.util.Map;
+
+import net.sf.jooreports.templates.Configuration;
 import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Nodes;
@@ -33,6 +36,12 @@ public class TextInputTagFilter extends XmlEntryFilter {
 
 	private boolean processJooScriptOnly = true;
 
+	public void applyConfigurations(Map configurations) {
+		super.applyConfigurations(configurations);
+		this.processJooScriptOnly = Configuration.getConfiguration(
+				Configuration.SETTING_PROCESS_JOOSCRIPT_ONLY, configurations);
+	}
+	
 	public void doFilter(Document document) {
 		Nodes textInputNodes = document.query("//text:text-input", XPATH_CONTEXT);
 		for (int nodeIndex = 0; nodeIndex < textInputNodes.size(); nodeIndex++) {
@@ -57,10 +66,6 @@ public class TextInputTagFilter extends XmlEntryFilter {
 				textInputElement.getParent().replaceChild(textInputElement, new Text(expression));
 			}
 		}
-	}
-
-	public void setProcessJooScriptOnly(boolean processJooScriptOnly) {
-		this.processJooScriptOnly = processJooScriptOnly;
 	}
 
 }
