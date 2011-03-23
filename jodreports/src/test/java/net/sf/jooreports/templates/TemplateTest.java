@@ -23,6 +23,11 @@ import java.util.Locale;
 import java.util.Map;
 
 import net.sf.jooreports.templates.DocumentTemplate.ContentWrapper;
+import net.sf.jooreports.templates.xmlfilters.XmlEntryFilter;
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.Nodes;
+import nu.xom.Text;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 
@@ -129,4 +134,36 @@ public class TemplateTest extends AbstractTemplateTest {
             +"First line Second line Third line";
         assertEquals("output content", expected, content);
     }
+    
+    /**
+     * Replace "Hello ${name}" with "Goodbye ${name}", don't use the default XmlEntryFilters
+     * 
+     * @throws Exception
+     */
+	public void testCustomXmlEntryFilter() throws Exception {
+		File templateFile = getTestFile("hello-template.odt");
+		DocumentTemplateFactory documentTemplateFactory = new DocumentTemplateFactory();
+		DocumentTemplate template = documentTemplateFactory.getTemplate(templateFile);
+		template.setXmlEntryFilters(new XmlEntryFilter[] { new XmlEntryFilter() {
+			public void doFilter(Document document) {
+				Nodes textNodes = document.query("//text:p", XPATH_CONTEXT);
+				for (int i = 0; i < textNodes.size(); i++) {
+					Element element = (Element) textNodes.get(i);
+					String value = element.getValue();
+					if (value.equals("Hello ${name}!")) {
+						element.removeChildren();
+						element.appendChild(new Text("Goodbye ${name}!"));
+					}
+				}
+			}
+		}});
+		Map model = new HashMap();
+		model.put("name", "Mirko");
+		File openDocumentFile = createTempFile(".odt");
+		template.createDocument(model, new FileOutputStream(openDocumentFile));
+		assertFileCreated(openDocumentFile);
+		String content = extractTextContent(openDocumentFile);
+		String expected = "Goodbye Mirko!";
+		assertEquals("output content", expected, content);
+	}
 }
