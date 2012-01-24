@@ -7,11 +7,11 @@ on SourceForge and located at https://jodreports.svn.sourceforge.net/svnroot/jod
 
 It is intended as a basis in case maintenance is required for the older 2.x series of JODReports.
 
-There are two branches:
-* develop
+There is currently one branches:
 * sourceforge
 
 The "sourceforge" branch contains **all** commits of the *trunk* of the SourceForge subversion repository, plus this README.md
 file. We won't accept any pull requests on this branch. Consider this branch a "tag".
 
-The "develop" branch should contain the most up-to-date maintenance version of the JODReports 2.x series.
+If maintenance should be required for the 2.x series, the most up-to-date maintenance version of the source code should live
+in a branch named "develop".
